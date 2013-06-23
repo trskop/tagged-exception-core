@@ -31,6 +31,8 @@ module Control.Monad.TaggedException.ExceptionT
 
     -- * Reexports
     , module Control.Monad.TaggedException
+    , module Control.Monad.TaggedException.UserException
+    , module Control.Monad.TaggedException.Utilities
     )
     where
 
@@ -39,9 +41,12 @@ import Prelude hiding (catch)
 import Control.Applicative (Alternative(..), Applicative(..))
 import Control.Arrow (first)
 import Control.Monad (MonadPlus(..), ap, liftM)
-import Control.Monad.Trans.Class (MonadTrans(lift))
 
 import Control.Monad.TaggedException
+import Control.Monad.Trans.Class (MonadTrans(lift))
+
+import Control.Monad.TaggedException.UserException
+import Control.Monad.TaggedException.Utilities
 
 
 -- | The exception monad transformer.  It can be used to add exception

@@ -24,7 +24,14 @@ module Control.Monad.TaggedException.UserException
 
 import Control.Exception (Exception)
 import Data.Data (Data)
+import Data.String (IsString(fromString))
+import Data.Typeable (Typeable)
+
+#ifdef VERSION_data_default
 import Data.Default (Default(def))
+#elif defined VERSION_data_default_class
+import Data.Default.Class (Default(def))
+#endif
 import Data.Monoid (Monoid(mempty, mappend))
 #ifdef VERSION_semigroups
 #if MIN_VERSION_semigroups(0,5,0)
@@ -32,8 +39,6 @@ import Data.List.NonEmpty (toList)
 #endif
 import Data.Semigroup (Semigroup(..))
 #endif
-import Data.String (IsString(fromString))
-import Data.Typeable (Typeable)
 import Control.Monad.Trans.Error (Error(noMsg, strMsg))
 
 import Control.Monad.TaggedException.Hidden (HidableException)
