@@ -1,7 +1,14 @@
 name:               tagged-exception-extra
 version:            1.0.0.0
 synopsis:           Extra types and functions for /tagged-excpeption-core/.
--- description:
+description:
+  Library provides:
+  .
+    * @UserException@ data type with @Monoid@ and @Semigroup@ instances.
+  .
+    * @ExceptionT@ monad transformer similar to @ErrorT@ with @MonadException@
+      and @MonadExceptionUtilities@ instances.
+Homepage:           https://github.com/trskop/tagged-exception
 license:            BSD3
 license-file:       LICENSE
 author:             Peter Trsko
@@ -52,3 +59,7 @@ library
     GHC-options:    -fwarn-identities
   if flag(pedantic)
     GHC-options:    -Werror
+
+source-repository head
+  type:             git
+  location:         git://github.com/trskop/tagged-exception.git

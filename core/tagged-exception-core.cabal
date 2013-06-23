@@ -6,6 +6,7 @@ Description:
   introduces 'MonadException' class, which uses phantom types to tag code that
   may raise exception.  Intention is to make exceptions explicit and to
   enforce exception handling.
+Homepage:           https://github.com/trskop/tagged-exception
 Copyright:          Copyright (c) 2009 - 2013, Peter Trsko
 License:            BSD3
 License-file:       LICENSE
@@ -62,3 +63,7 @@ Library
     GHC-options:    -fwarn-identities
   if flag(pedantic)
     GHC-options:    -Werror
+
+source-repository head
+  type:             git
+  location:         git://github.com/trskop/tagged-exception.git
