@@ -1,5 +1,5 @@
 Name:               tagged-exception-core
-Version:            1.0
+Version:            1.0.0.0
 Synopsis:           Reflect exceptions using phantom types.
 Description:
   This library provides interface similar to /extensible-exceptions/.  It
@@ -21,7 +21,7 @@ Category:
 
 Build-type:         Simple
 Cabal-version:      >= 1.8
-Tested-with:        GHC == 7.0.3
+-- Tested-with:
 -- Extra-source-files:
 
 Flag pedantic
