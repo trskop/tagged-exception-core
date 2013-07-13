@@ -286,6 +286,7 @@ import Control.Exception as E
 
 import Control.Monad.TaggedException.Core
 import Control.Monad.TaggedException.Hidden
+import Control.Monad.TaggedException.Utilities
 
 -- $usage
 --
