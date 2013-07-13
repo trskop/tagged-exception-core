@@ -9,7 +9,7 @@
 -- Stability:    provisional
 -- Portability:  non-portable (CPP, DeriveDataTypeable)
 --
--- 'UserException' has instances for 'Exception', and 'HidableException'
+-- 'UserException' has instances for 'Exception', and 'HiddenException'
 -- classes.   Useful for implementation of @'Monad'('fail')@, and is
 -- done so in "Control.Monad.ExceptionT".
 module Control.Monad.TaggedException.UserException
@@ -41,7 +41,7 @@ import Data.Semigroup (Semigroup(..))
 #endif
 import Control.Monad.Trans.Error (Error(noMsg, strMsg))
 
-import Control.Monad.TaggedException.Hidden (HidableException)
+import Control.Monad.TaggedException.Hidden (HiddenException)
 
 
 -- | This exception type can be used for implementation of @'Monad'('fail')@.
@@ -111,7 +111,7 @@ instance Error UserException where
 
 instance Exception UserException
 
-instance HidableException UserException
+instance HiddenException UserException
 
 instance IsString UserException where
     fromString = UserException
