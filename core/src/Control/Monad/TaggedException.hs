@@ -175,32 +175,8 @@ module Control.Monad.TaggedException
     --    (<http://www.haskell.org/haskellwiki/Error_vs._Exception>).
     , module Control.Monad.TaggedException.Hidden
 
-    -- * Reexported from @Control.Exception@ module
-    , E.Exception(..)
-        -- Exception class
-    , E.SomeException(..)
-        -- Root exception
-    , E.ArithException(..)
-    , E.ArrayException(..)
-    , E.AssertionFailed(..)
-    , E.AsyncException(..)
-#if MIN_VERSION_base(4,2,0)
-    , E.BlockedIndefinitelyOnMVar(..)
-    , E.BlockedIndefinitelyOnSTM(..)
-#else
-    , E.BlockedIndefinitely(..)
-    , E.BlockedOnDeadMVar(..)
-#endif
-    , E.Deadlock(..)
-    , E.ErrorCall(..)
-    , E.IOException
-    , E.NestedAtomically(..)
-    , E.NoMethodError(..)
-    , E.NonTermination(..)
-    , E.PatternMatchFail(..)
-    , E.RecConError(..)
-    , E.RecSelError(..)
-    , E.RecUpdError(..)
+    -- * Asynchronous exceptions and bracket family of functions
+    , module Control.Monad.TaggedException.Utilities
 
     -- * Some related work
     --
@@ -238,6 +214,33 @@ module Control.Monad.TaggedException
     --
     -- * /monad-peel/
     --   (<http://hackage.haskell.org/package/monad-peel>)
+
+    -- * Reexported from @Control.Exception@ module
+    , E.Exception(..)
+        -- Exception class
+    , E.SomeException(..)
+        -- Root exception
+    , E.ArithException(..)
+    , E.ArrayException(..)
+    , E.AssertionFailed(..)
+    , E.AsyncException(..)
+#if MIN_VERSION_base(4,2,0)
+    , E.BlockedIndefinitelyOnMVar(..)
+    , E.BlockedIndefinitelyOnSTM(..)
+#else
+    , E.BlockedIndefinitely(..)
+    , E.BlockedOnDeadMVar(..)
+#endif
+    , E.Deadlock(..)
+    , E.ErrorCall(..)
+    , E.IOException
+    , E.NestedAtomically(..)
+    , E.NoMethodError(..)
+    , E.NonTermination(..)
+    , E.PatternMatchFail(..)
+    , E.RecConError(..)
+    , E.RecSelError(..)
+    , E.RecUpdError(..)
     )
     where
 
