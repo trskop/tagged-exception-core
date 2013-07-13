@@ -30,18 +30,18 @@ module Control.Monad.TaggedException
     --
     -- This library tries to get rid of this issue by making exceptions
     -- visible. On the other hand it makes things little more complicated, but
-    -- fortunatelly not too complicated.
+    -- fortunatelly not too much.
     --
     -- Some of the benefits of this approach are listed bellow.
 
     -- *** Unification of exception handling
     --
     -- | Raising and handling exception becomes the same for all
-    -- 'MonadException' instance including @IO@ Code that used exception in
-    -- @IO@ monad or @ErrorT@ style error handling can be easily modified to
-    -- use API defined by this library.
+    -- 'MonadException' instances. This includes code that uses exceptions in
+    -- @IO@ monad and @ErrorT@ style error handling. All that can be easily
+    -- modified to use API defined by this library.
     --
-    -- For ilustration there is a great summary of varios ways of error
+    -- For ilustration there is a great summary of various ways of error
     -- handling in Haskell:
     --
     -- * /8 ways to report errors in Haskell revisited/
@@ -49,8 +49,9 @@ module Control.Monad.TaggedException
     --
     -- * <http://www.randomhacks.net/articles/2007/03/10/haskell-8-ways-to-report-errors/>
     --
-    -- Above ilustrates that any unification or framework for transforming one
-    -- error handling technique to another are very benefitial in practice.
+    -- Posts mentioned above ilustrate that any unification or framework for
+    -- transforming one error handling technique to another are very benefitial
+    -- in practice.
 
     -- *** Avoiding fail
     --
