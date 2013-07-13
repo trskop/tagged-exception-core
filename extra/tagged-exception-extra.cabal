@@ -44,9 +44,10 @@ library
   build-depends:
       base >= 4 && < 4.7
     -- ^ Tagged-exception-core is capable to handle this range.
-    , tagged-exception-core == 1.*
+    , tagged-exception-core >= 1.1.0.0 && < 2
     , transformers >= 0.2 && < 0.4
     -- ^ Tagged-exception-core is capable to handle this range.
+
   if flag(with-data-default-class)
     build-depends:  data-default-class == 0.0.*
   else
