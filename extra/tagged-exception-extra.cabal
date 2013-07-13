@@ -35,6 +35,12 @@ flag with-data-default-class
   Description:      Use data-default-class package instead of data-default.
   Default:          True
 
+flag with-semigroups
+  description:
+    Adds semigroups to the list of dependencies and builds Semigroup instances
+    for various types.
+  default: True
+
 library
   hs-source-dirs:   src
   exposed-modules:
@@ -52,6 +58,9 @@ library
     build-depends:  data-default-class == 0.0.*
   else
     build-depends:  data-default >= 0.2 && < 0.6
+
+  if flag(with-semigroups)
+    build-depends:  semigroups >= 0.3.0 && < 1
 
   GHC-options:      -Wall
   if impl(GHC >= 6.8)

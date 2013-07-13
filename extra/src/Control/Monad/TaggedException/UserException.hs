@@ -29,7 +29,7 @@ import Data.Typeable (Typeable)
 
 #ifdef VERSION_data_default
 import Data.Default (Default(def))
-#elif defined VERSION_data_default_class
+#else
 import Data.Default.Class (Default(def))
 #endif
 import Data.Monoid (Monoid(mempty, mappend))
