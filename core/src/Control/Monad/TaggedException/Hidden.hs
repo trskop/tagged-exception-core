@@ -10,7 +10,7 @@
 --
 -- Support for hidden exceptions.
 module Control.Monad.TaggedException.Hidden
-    ( HidableException(..)
+    ( HiddenException(..)
     , hideWith
     , throwHidden
     , throw'
@@ -51,48 +51,50 @@ import Control.Monad.TaggedException.Core (MonadException, Throws)
 import qualified Control.Monad.TaggedException.Core as Core (catch, throw)
 
 
-class (Exception e) => HidableException e where
+-- | Class for exception that can be removed from the type signature. Default
+-- implementation for 'hide' method is provided.
+class (Exception e) => HiddenException e where
     -- | Hide exception tag.
     hide :: (MonadException m) => Throws e m a -> m a
     hide = Unsafe.hideOne
     {-# INLINE hide #-}
 
--- {{{ HidableException -- Instances ------------------------------------------
+-- {{{ HiddenException -- Instances -------------------------------------------
 -- (sorted alphabeticaly)
 
-instance HidableException Dynamic
-instance HidableException E.ArithException
-instance HidableException E.ArrayException
-instance HidableException E.AssertionFailed
-instance HidableException E.AsyncException
+instance HiddenException Dynamic
+instance HiddenException E.ArithException
+instance HiddenException E.ArrayException
+instance HiddenException E.AssertionFailed
+instance HiddenException E.AsyncException
 #if MIN_VERSION_base(4,2,0)
-instance HidableException E.BlockedIndefinitelyOnMVar
-instance HidableException E.BlockedIndefinitelyOnSTM
+instance HiddenException E.BlockedIndefinitelyOnMVar
+instance HiddenException E.BlockedIndefinitelyOnSTM
 #else
-instance HidableException E.BlockedIndefinitely
-instance HidableException E.BlockedOnDeadMVar
+instance HiddenException E.BlockedIndefinitely
+instance HiddenException E.BlockedOnDeadMVar
 #endif
-instance HidableException E.Deadlock
-instance HidableException E.ErrorCall
-instance HidableException E.IOException
-instance HidableException E.NestedAtomically
-instance HidableException E.NoMethodError
-instance HidableException E.NonTermination
-instance HidableException E.PatternMatchFail
-instance HidableException E.RecConError
-instance HidableException E.RecSelError
-instance HidableException E.RecUpdError
-instance HidableException E.SomeException
-instance HidableException ExitCode
+instance HiddenException E.Deadlock
+instance HiddenException E.ErrorCall
+instance HiddenException E.IOException
+instance HiddenException E.NestedAtomically
+instance HiddenException E.NoMethodError
+instance HiddenException E.NonTermination
+instance HiddenException E.PatternMatchFail
+instance HiddenException E.RecConError
+instance HiddenException E.RecSelError
+instance HiddenException E.RecUpdError
+instance HiddenException E.SomeException
+instance HiddenException ExitCode
 
--- }}} HidableException -- Instances ------------------------------------------
+-- }}} HiddenException -- Instances -------------------------------------------
 
 -- | Map exception before hiding it.
 --
 -- This is the preferred way to do exception hiding, by mapping it in to a
 -- different exception that better describes its fatality.
 hideWith
-    :: (Exception e, HidableException e', MonadException m)
+    :: (Exception e, HiddenException e', MonadException m)
     => (e -> e')
     -> Throws e m a
     -> m a
@@ -100,7 +102,7 @@ hideWith f = (`Core.catch` \ e -> throwHidden (f e))
 
 -- | Throw exceptions and then disregard type tag.
 throwHidden
-    :: (HidableException e, MonadException m)
+    :: (HiddenException e, MonadException m)
     => e
     -> m a
 throwHidden = hide . Core.throw
@@ -108,7 +110,7 @@ throwHidden = hide . Core.throw
 
 -- | Alias for @throwHidden@.
 throw'
-    :: (HidableException e, MonadException m)
+    :: (HiddenException e, MonadException m)
     => e
     -> m a
 throw' = throwHidden
