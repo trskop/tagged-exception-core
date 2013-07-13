@@ -6,16 +6,16 @@
 --
 -- Stability:    provisional
 -- Portability:  non-portable (CPP, depends on non-portable module)
---
--- This library provides interface that is similar to /extensible-exceptions/.
--- It introduces 'MonadException' class, which uses phantom type to tag code
--- that may raise exception.  Intention is to make exceptions explicit and to
--- enforce exception handling.
 module Control.Monad.TaggedException
     (
     -- * Introduction
     --
-    -- | TODO:
+    -- | This library provides interface that is similar to
+    -- /extensible-exceptions/. It introduces 'MonadException' class, which
+    -- uses phantom type to tag code that may raise exception.  Intention is to
+    -- make exceptions explicit and to enforce exception handling.
+    --
+    -- This approach is based on commonly used techniques:
     --
     -- * Phantom Types <http://www.haskell.org/haskellwiki/Phantom_type>
     --
@@ -23,17 +23,43 @@ module Control.Monad.TaggedException
 
     -- ** Why use this?
     --
-    -- | TODO
+    -- | Exceptions are one of the fastest and most scalable ways of handling
+    -- failures and errors. One of the downsides of exceptions as defined in
+    -- Haskell is that they aren't visible in type signatures as in example
+    -- when using @Maybe@ or @ErrorT@.
     --
-    -- * Same interface for @IO@ and @ExceptionT@. Unification of exception
-    --   handling.
+    -- This library tries to get rid of this issue by making exceptions
+    -- visible. On the other hand it makes things little more complicated, but
+    -- fortunatelly not too complicated.
+    --
+    -- Some of the benefits of this approach are listed bellow.
+
+    -- *** Unification of exception handling
+    --
+    -- | Raising and handling exception becomes the same for all
+    -- 'MonadException' instance including @IO@ Code that used exception in
+    -- @IO@ monad or @ErrorT@ style error handling can be easily modified to
+    -- use API defined by this library.
+    --
+    -- For ilustration there is a great summary of varios ways of error
+    -- handling in Haskell:
+    --
+    -- * /8 ways to report errors in Haskell revisited/
     --   <http://blog.ezyang.com/2011/08/8-ways-to-report-errors-in-haskell-revisited/>
-    --   <http://www.randomhacks.net/articles/2007/03/10/haskell-8-ways-to-report-errors/>
+    --
+    -- * <http://www.randomhacks.net/articles/2007/03/10/haskell-8-ways-to-report-errors/>
+    --
+    -- Above ilustrates that any unification or framework for transforming one
+    -- error handling technique to another are very benefitial in practice.
 
     -- *** Avoiding fail
     --
     -- | Sometimes @'Monad'('fail')@ is used to generalize exception handling.
-    -- This library allows usege of similar approach.
+    -- While it provides a generalized interface it also introduces controversy
+    -- that sorrounds 'fail'.
+    --
+    -- This library allows usege of similar approach without using 'fail' and
+    -- with explicitly visible exception.
     --
     -- Instead of function like:
     --
@@ -54,18 +80,6 @@ module Control.Monad.TaggedException
     -- where @LookupFailure@ is instance of 'Exception' class. While in some
     -- ways it's similar to using @ErrorT@, it has all the flexibility of
     -- /extensible-exceptions/ for arbitrary 'MonadException' instance.
-
-    -- ** Why not to use X
-    --
-    -- | TODO
-    --
-    -- * Why not /control-monad-exception/
-    --   <http://hackage.haskell.org/package/control-monad-exception>. No
-    --   @MultiParamTypeClasses@, @FlexibleContexts@, @FlexibleInstances@, etc.
-
-    -- ** Why use X
-    --
-    -- | TODO
 
     -- ** Dependencies
     --
