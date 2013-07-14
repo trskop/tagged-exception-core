@@ -1,13 +1,14 @@
-name:               tagged-exception-extra
+name:               tagged-exception-transformer
 version:            1.1.0.0
-synopsis:           Extra types and functions for /tagged-excpeption-core/.
+synopsis:
+  Monad transformer based on API provided by /tagged-excpeption-core/ package.
 description:
   Library provides:
   .
-    * @UserException@ data type with @Monoid@ and @Semigroup@ instances.
-  .
     * @ExceptionT@ monad transformer similar to @ErrorT@ with @MonadException@
       and @MonadExceptionUtilities@ instances.
+  .
+    * @UserException@ data type with @Monoid@ and @Semigroup@ instances.
 Homepage:           https://github.com/trskop/tagged-exception
 license:            BSD3
 license-file:       LICENSE
