@@ -7,11 +7,55 @@
 --
 -- Stability:    provisional
 -- Portability:  non-portable (CPP, depends on non-portable module)
---
--- Support for hidden exceptions.
 module Control.Monad.TaggedException.Hidden
-    ( HiddenException(..)
+    (
+    -- * HiddenException class
+    --
+    -- | Since 'HiddenException' provides default implementation for 'hide'
+    -- method making instances of it is trivial. Example of how to create
+    -- instance of HiddenException:
+    --
+    -- > data MyException = MyException String
+    -- >   deriving (Typeable)
+    -- >
+    -- > instance Show MyException where
+    -- >     showsPrec _ (MyException msg) =
+    -- >         showString "MyException: " . shows msg
+    -- >
+    -- > instance Exception MyException
+    -- > instance HiddenException MyException
+      HiddenException(..)
+
+    -- ** Mapping existing visible exception to hidden ones
+    --
+    -- | This is a prefered way of hiding exceptions. Difference from just
+    -- hiding the type tag and mapping it in to hidden exception is that in
+    -- later case we can provide additional information. Most important is to
+    -- specify why that particluar exception was hidden.
+    --
+    -- Example:
+    --
+    -- > data UnrecoverableException
+    -- >     = UnrecoverableIOException String IOException
+    -- >   deriving (Typeable)
+    -- >
+    -- > instance Show UnrecoverableException where
+    -- >     showsPrec _ (UnrecoverableIOException info e)
+    -- >         showString "Unrecoverable exception occurred in "
+    -- >         . showString info . showString ": " . shows e
+    -- >
+    -- > instance Exception UnrecoverableException
+    -- > instance HiddenException UnrecoverableException
+    -- >
+    -- > hideIOException
+    -- >     :: (MonadException e)
+    -- >     => String
+    -- >     -> Throws IOException m a
+    -- >     -> m a
+    -- > hideIOException = hideWith . UnrecoverableIOException
     , hideWith
+
+    -- ** Raising hidden exceptions
     , throwHidden
     , throw'
     )
