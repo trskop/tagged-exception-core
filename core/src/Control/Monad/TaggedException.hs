@@ -17,9 +17,9 @@ module Control.Monad.TaggedException
     --
     -- This approach is based on commonly used techniques:
     --
-    -- * Phantom Types <http://www.haskell.org/haskellwiki/Phantom_type>
+    -- * /Phantom Types/ <http://www.haskell.org/haskellwiki/Phantom_type>
     --
-    -- * Type Witnesses <http://www.haskell.org/haskellwiki/Type_witness>
+    -- * /Type Witnesses/ <http://www.haskell.org/haskellwiki/Type_witness>
 
     -- ** Why use this?
     --
@@ -47,9 +47,10 @@ module Control.Monad.TaggedException
     -- * /8 ways to report errors in Haskell revisited/
     --   <http://blog.ezyang.com/2011/08/8-ways-to-report-errors-in-haskell-revisited/>
     --
-    -- * <http://www.randomhacks.net/articles/2007/03/10/haskell-8-ways-to-report-errors/>
+    -- * /8 ways to report errors in Haskell/
+    --   <http://www.randomhacks.net/articles/2007/03/10/haskell-8-ways-to-report-errors/>
     --
-    -- Posts mentioned above ilustrate that any unification or framework for
+    -- Posts mentioned above show that any unification or framework for
     -- transforming one error handling technique to another are very benefitial
     -- in practice.
 
@@ -110,8 +111,8 @@ module Control.Monad.TaggedException
     -- | Functions with prime at the end of there name aren't restricted by the
     -- phantom type while those without it are.  Functions with prime can
     -- therefore operate on arbitrary exceptions.  Use such functions when
-    -- operating on exceptions that are different from exception phantom type,
-    -- i.e. hidden ones.
+    -- operating on exceptions that are different from exception specified by a
+    -- phantom type, i.e. hidden ones.
     --
     -- In case of @IO@ monad, primed functions behave as those from
     -- @Control.Exception@ module with the same name, but without prime of
@@ -133,15 +134,15 @@ module Control.Monad.TaggedException
     -- hidden @Prelude(catch)@:
     --
     -- > import Prelude hiding (catch)
-    -- > import Control.Monad.ExceptionWitness
+    -- > import Control.Monad.TaggedException
     --
     -- or import:
     --
-    -- > import Control.Monad.ExceptionWitness as E
+    -- > import Control.Monad.TaggedException as E
     --
     -- and then use @E.catch@, in later case you can also use qualified import:
     --
-    -- > import qualified Control.Monad.ExceptionWitness as E
+    -- > import qualified Control.Monad.TaggedException as E
     --
     -- It is recomended to use explicit import list or, as mentioned before,
     -- qualified import. See also /Import modules properly/ on /Haskell Wiki/:
@@ -150,11 +151,13 @@ module Control.Monad.TaggedException
     -- ** Defining new monad transformer
     -- $definingMonadTransformer
 
-    -- * Library core
+    -- * API documentation
+
+    -- ** Library core
     --
     -- | Basic library interface.  Main idea behind it is to provide very
     -- stable API that can be imported directly from
-    -- "Control.Monad.ExceptionWitness.Core" module or as part of this one.
+    -- "Control.Monad.TaggedException.Core" module or as part of this one.
     --
     -- Among others it provides:
     --
@@ -174,7 +177,7 @@ module Control.Monad.TaggedException
     --   just flipped version of 'catch'.
       module Control.Monad.TaggedException.Core
 
-    -- * Hidable exceptions
+    -- ** Hidable exceptions
     --
     -- | Support for hidden/uncaught exceptions.  The ideas behind hiding
     -- thrown exception is:
@@ -188,9 +191,11 @@ module Control.Monad.TaggedException
     --    exceptions aren't ment to be caught in certain layers.  See also
     --    /Error vs. Exception/ on /Haskell Wiki/
     --    (<http://www.haskell.org/haskellwiki/Error_vs._Exception>).
+    --
+    -- See "Control.Monad.TaggedException.Hidden" for examples.
     , module Control.Monad.TaggedException.Hidden
 
-    -- * Asynchronous exceptions and bracket family of functions
+    -- ** Asynchronous exceptions and bracket family of functions
     , module Control.Monad.TaggedException.Utilities
 
     -- * Some related work
@@ -351,8 +356,8 @@ import Control.Monad.TaggedException.Utilities
 -- >     :: (m a -> (e -> m a) -> m a)
 -- >     -> T x m a -> (e -> T x m a) -> T x m a
 --
--- And type of lifting function for masking asynchronous exception will be
--- something like:
+-- And lifting function for masking asynchronous exception will have type like
+-- this:
 --
 -- > liftMask
 -- >     :: (forall b. ((forall a. m a -> m a) -> m b) -> m b)
