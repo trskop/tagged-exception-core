@@ -9,7 +9,7 @@
 -- Stability:    experimental
 -- Portability:  portable
 --
--- Comonad and ComonadApply instances for @'Throws' e w@.
+-- 'Comonad' and 'ComonadApply' instances for @'Throws' e w@.
 --
 -- Importing:
 --
@@ -17,7 +17,7 @@
 module Control.Monad.TaggedException.Instances.Comonad ()
     where
 
-import Control.Comonad
+import Control.Comonad (Comonad(..), ComonadApply(..))
 import Control.Monad.TaggedException.Core (Throws)
 import qualified Control.Monad.TaggedException.Unsafe as Unsafe
     ( hideOne
