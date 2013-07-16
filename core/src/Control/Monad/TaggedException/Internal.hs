@@ -43,7 +43,10 @@ import Control.Monad.Trans.Class (MonadTrans(lift))
 
 
 -- | Exception tag.
-newtype Throws e m a = Throws {hideOne :: m a}
+newtype Throws e m a = Throws
+    { hideOne :: m a
+    -- ^ Hide one exception.
+    }
 
 -- {{{ Instances --------------------------------------------------------------
 
@@ -88,9 +91,11 @@ throwsTwo = Throws . Throws
 throwsThree :: m a -> Throws e'' (Throws e' (Throws e m)) a
 throwsThree = Throws . Throws . Throws
 
+-- | Hide two exceptions, but without 'MonadException' restriction.
 hideTwo :: Throws e (Throws e' m) a -> m a
 hideTwo = hideOne . hideOne
 
+-- | Hide three exceptions, but without 'MonadException' restriction.
 hideThree :: Throws e (Throws e' (Throws e'' m)) a -> m a
 hideThree = hideOne . hideOne . hideOne
 
@@ -143,11 +148,15 @@ insideT3
     -> Throws e m1 a -> Throws e m2 b -> Throws e m3 c -> Throws e m4 d
 insideT3 f m n o = throwsOne $ f (hideOne m) (hideOne n) (hideOne o)
 
+-- | Join two exception tags in to one. Isn't restricted just to
+-- 'MonadException' instances.
 joinT
     :: Throws e (Throws e m) a
     -> Throws e m a
 joinT = hideOne
 
+-- | Join three exception tags in to one. Isn't restricted just to
+-- 'MonadException' instances.
 joinT3
     :: Throws e (Throws e (Throws e m)) a
     -> Throws e m a

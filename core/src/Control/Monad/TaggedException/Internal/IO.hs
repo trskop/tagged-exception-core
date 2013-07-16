@@ -25,7 +25,7 @@ import qualified Control.Monad.TaggedException.Internal as Unsafe
 
 
 -- | Wrapper for @mask@ (or @\ f -> block $ f unblock@ for base <= 4.3) from
--- @Control.Exception@.
+-- "Control.Exception".
 mask' :: ((forall a. IO a -> IO a) -> IO b) -> IO b
 #if MIN_VERSION_base(4,3,0)
 mask' = IOE.mask
@@ -33,7 +33,8 @@ mask' = IOE.mask
 mask' f = IOE.block $ f IOE.unblock
 #endif
 
--- | Lifted 'mask''.
+-- | Lifted 'mask'' it's still unsafe since it doesn't have 'Exception'
+-- constraint.
 mask
     :: ((forall a. Throws e IO a -> Throws e IO a) -> Throws e IO b)
     -> Throws e IO b
