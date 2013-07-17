@@ -424,7 +424,7 @@ flipT = Unsafe.flipT
 -- > insideT flipT
 -- >     :: (Exception e0, Exception e1, Exception e2, MonadException m)
 -- >     => Throws e0 (Throws e1 (Throws e2 m)) a
--- >     -> Throws e0 (Throws e2 (Throws e3 m)) a
+-- >     -> Throws e0 (Throws e2 (Throws e1 m)) a
 --
 -- > flipT . insideT flipT
 -- >     :: (Exception e0, Exception e1, Exception e2, MonadException m)
