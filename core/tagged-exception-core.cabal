@@ -7,6 +7,7 @@ Description:
   may raise exception.  Intention is to make exceptions explicit and to
   enforce exception handling.
 Homepage:           https://github.com/trskop/tagged-exception
+Bug-reports:        https://github.com/trskop/tagged-exception/issues
 Copyright:          Copyright (c) 2009 - 2013, Peter Trsko
 License:            BSD3
 License-file:       LICENSE

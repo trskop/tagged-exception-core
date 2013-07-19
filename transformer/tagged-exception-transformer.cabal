@@ -9,7 +9,8 @@ description:
       and @MonadExceptionUtilities@ instances.
   .
     * @UserException@ data type with @Monoid@ and @Semigroup@ instances.
-Homepage:           https://github.com/trskop/tagged-exception
+homepage:           https://github.com/trskop/tagged-exception
+bug-reports:        https://github.com/trskop/tagged-exception/issues
 license:            BSD3
 license-file:       LICENSE
 author:             Peter Trsko
