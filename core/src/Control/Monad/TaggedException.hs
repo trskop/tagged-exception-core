@@ -92,8 +92,11 @@ module Control.Monad.TaggedException
     --
     -- * /extensible-exceptions/ for /4 >= base < 4.2/
     --
-    -- * /transformers >= 0.2 && 0.4/: De facto current standard for monad
+    -- * /transformers >= 0.2 && < 0.4/: De facto current standard for monad
     --   transformers.  Included in newer versions of HaskellPlatform.
+    --
+    -- * /mmorph/ >= 1.0.0 && < 1.1: Monad morphism utilities.  Currently not
+    --   in HaskellPlatform.
 
     -- ** Naming conventions
     --

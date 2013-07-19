@@ -41,6 +41,7 @@ import Control.Applicative (Alternative(..), Applicative(..))
 import Control.Monad (MonadPlus(..))
 
 import Control.Monad.IO.Class (MonadIO(liftIO))
+import Control.Monad.Morph (MFunctor(hoist), MMonad(embed))
 import Control.Monad.Trans.Class (MonadTrans(lift))
 
 
@@ -97,6 +98,19 @@ instance (MonadIO m) => MonadIO (Throws e m) where
 instance MonadTrans (Throws e) where
     lift = Throws
     {-# INLINE lift #-}
+
+-- | Since @1.2.0.0@.
+instance MFunctor (Throws e) where
+    -- Monad m => (forall a. m a -> n a) -> Throws e m b -> Throws e n b
+    hoist f x =  Throws (f (hideOne x))
+    {-# INLINEABLE hoist #-}
+
+-- | Since @1.2.0.0@.
+instance MMonad (Throws e) where
+    -- Monad n
+    -- => (forall a. m a -> Throws e n a) -> Throws e m b -> Throws e n b
+    embed f x = f (hideOne x)
+    {-# INLINEABLE embed #-}
 
 -- }}} Instances --------------------------------------------------------------
 
