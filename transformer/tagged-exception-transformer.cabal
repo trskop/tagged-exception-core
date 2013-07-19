@@ -1,7 +1,7 @@
 name:               tagged-exception-transformer
-version:            1.1.0.0
+version:            1.2.0.0
 synopsis:
-  Monad transformer based on API provided by /tagged-excpeption-core/ package.
+  Monad transformer based on API provided by /tagged-exception-core/ package.
 description:
   Library provides:
   .
