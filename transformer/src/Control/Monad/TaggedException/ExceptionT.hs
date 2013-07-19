@@ -15,6 +15,7 @@ module Control.Monad.TaggedException.ExceptionT
       ExceptionT(..)
     , evalExceptionT
     , mapExceptionT
+    , mapExceptionT2
 
     -- * Exception operations
     , throwException
@@ -72,6 +73,16 @@ mapExceptionT
     :: (m (Either SomeException a) -> n (Either SomeException b))
     -> ExceptionT m a -> ExceptionT n b
 mapExceptionT = (ExceptionT .) . (. runExceptionT)
+{-# INLINE mapExceptionT #-}
+
+-- | Generalization of 'mapExceptionT2' to functions of arity two.
+mapExceptionT2
+    :: (m (Either SomeException a)
+        -> n (Either SomeException b)
+        -> o (Either SomeException c))
+    -> ExceptionT m a -> ExceptionT n b -> ExceptionT o c
+mapExceptionT2 f x y = ExceptionT $ f (runExceptionT x) (runExceptionT y)
+{-# INLINE mapExceptionT2 #-}
 
 -- | Lift monad to 'ExceptionT' monad transformer, it's also used as
 -- implementation of @'MonadTrans'('lift')@.
@@ -121,6 +132,7 @@ instance (Monad m) => MonadException (ExceptionT m) where
     catch' = catchException
 
 instance (Monad m) => MonadExceptionUtilities (ExceptionT m)
+    -- Default implementations for methods are used.
 
 instance (Monad m) => MonadPlus (ExceptionT m) where
     mzero = throwException emptyUserException
@@ -141,6 +153,7 @@ liftCallCC
     -> ((a -> ExceptionT m b) -> ExceptionT m a) -> ExceptionT m a
 liftCallCC callCC f = ExceptionT . callCC $ \ g ->
     runExceptionT . f $ ExceptionT . g . Right
+{-# INLINE liftCallCC #-}
 
 -- | Lift a @catch@ operation.
 liftCatch
