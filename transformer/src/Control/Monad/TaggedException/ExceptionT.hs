@@ -42,6 +42,7 @@ import Control.Applicative (Alternative(..), Applicative(..))
 import Control.Arrow (first)
 import Control.Monad (MonadPlus(..), ap, liftM)
 
+import Control.Monad.Morph (MFunctor(hoist), MMonad(embed))
 import Control.Monad.TaggedException
 import Control.Monad.Trans.Class (MonadTrans(lift))
 
@@ -141,6 +142,17 @@ instance (Monad m) => MonadPlus (ExceptionT m) where
 
 instance MonadTrans ExceptionT where
     lift = liftMonad
+
+-- | Since @1.2.0.0@.
+instance MFunctor ExceptionT where
+    -- Monad m => (forall a. m a -> n a) -> ExceptionT m b -> ExceptionT n b
+    hoist f =  mapExceptionT f
+
+-- | Since @1.2.0.0@.
+instance MMonad ExceptionT where
+    -- Monad n
+    -- => (forall a. m a -> ExceptionT n a) -> ExceptionT m b -> ExceptionT n b
+    embed f x = f (runExceptionT x) >>= either throwException return
 
 -- }}} ExceptionT -- Instances ------------------------------------------------
 

@@ -55,6 +55,9 @@ library
     , tagged-exception-core >= 1.1.0.0 && < 2
     , transformers >= 0.2 && < 0.4
     -- ^ Tagged-exception-core is capable to handle this range.
+    , mmorph >= 1.0.0 && < 1.1
+    -- ^ Dependency introduced tagged-exception-transformer-1.2.0.0
+    -- and also in tagged-exception-core-1.2.0.0.
 
   if flag(with-data-default-class)
     build-depends:  data-default-class == 0.0.*
