@@ -1,5 +1,5 @@
 Name:               tagged-exception-core
-Version:            1.1.0.0
+Version:            1.2.0.0
 Synopsis:           Reflect exceptions using phantom types.
 Description:
   This library provides interface similar to /extensible-exceptions/.  It

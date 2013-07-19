@@ -69,7 +69,8 @@ import Data.Monoid (Monoid)
 
 import Control.Monad.TaggedException.Internal (Throws)
 import qualified Control.Monad.TaggedException.Internal as Unsafe
-    ( flipT
+    ( embedT
+    , flipT
     , hideOne
     , insideT
     , insideT2
@@ -485,5 +486,11 @@ insideT3
     -> Throws e m1 a -> Throws e m2 b -> Throws e m3 c -> Throws e m4 d
 insideT3 = Unsafe.insideT3
 {-# INLINE insideT3 #-}
+
+-- | Since @1.2.0.0@
+embedT :: (Exception e, MonadException m, MonadException m')
+    => (m a -> Throws e m' b)
+    -> Throws e m a -> Throws e m' b
+embedT = Unsafe.embedT
 
 -- }}} Exception tag -- Combinators -------------------------------------------

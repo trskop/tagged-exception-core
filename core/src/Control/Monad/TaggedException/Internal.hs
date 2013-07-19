@@ -30,6 +30,7 @@ module Control.Monad.TaggedException.Internal
     , joinT
     , joinT3
     , flipT
+    , embedT
 
     -- * Lift operations
     , liftMask
@@ -38,6 +39,7 @@ module Control.Monad.TaggedException.Internal
 
 import Control.Applicative (Alternative(..), Applicative(..))
 import Control.Monad (MonadPlus(..))
+
 import Control.Monad.IO.Class (MonadIO(liftIO))
 import Control.Monad.Trans.Class (MonadTrans(lift))
 
@@ -209,6 +211,11 @@ flipT
     -> Throws e (Throws e' m) a
 flipT = throwsTwo . hideTwo
 {-# INLINE flipT #-}
+
+-- | Since @1.2.0.0@.
+embedT :: (m a -> Throws e n b) -> Throws e m a -> Throws e n b
+embedT = (. hideOne)
+{-# INLINE embedT #-}
 
 -- | Lift @mask@ operation.
 liftMask

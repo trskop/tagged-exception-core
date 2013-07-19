@@ -37,6 +37,8 @@ module Control.Monad.TaggedException.Unsafe
     , joinT3
     , flipT
 
+    , embedT
+
     -- * Lift operations
     , liftThrow
     , liftMask
@@ -47,6 +49,7 @@ import Control.Monad.Trans.Class (MonadTrans(lift))
 
 import Control.Monad.TaggedException.Internal
     ( Throws
+    , embedT
     , flipT
     , hideOne
     , hideThree
