@@ -28,6 +28,7 @@ module Control.Monad.TaggedException.Core
     , insideT3
     , insideTf
     , insideTf2
+    , embedT
 
     -- * MonadException
     , MonadException(..)
