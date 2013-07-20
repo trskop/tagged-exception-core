@@ -142,7 +142,7 @@ hideWith
     => (e -> e')
     -> Throws e m a
     -> m a
-hideWith f = (`Core.catch` \ e -> throwHidden (f e))
+hideWith f = (`Core.catch` throwHidden . f)
 
 -- | Throw exceptions and then disregard type tag.
 throwHidden

@@ -401,3 +401,7 @@ import Control.Monad.TaggedException.Utilities
 -- >     -> (a' -> T x m b')
 -- >     -> (a' -> Throws e (T x m) c')
 -- >     -> Throws e (T x m) c'
+
+{-# ANN module "HLint: ignore Use import/export shortcut" #-}
+-- ^ For documentation purposes it's better to import and export each module
+-- separately.
