@@ -173,9 +173,11 @@ try
     -> m (Either e a)
 try m = liftM Right m `catch` (return . Left)
 
--- | Map one exception to another. Mapping \"inner\" exception has generally two forms.
+-- | Map one exception to another.
 --
--- * Modifying raised exception, but not changing its type:
+-- Mapping \"inner\" exception has generally two forms:
+--
+-- 1. Modifying raised exception, but not changing its type:
 --
 -- > liftT1 . mapException
 -- >     :: (Exception e, Exception e', MonadException m)
@@ -183,13 +185,21 @@ try m = liftM Right m `catch` (return . Left)
 -- >     -> Throws e' (Throws e m) a
 -- >     -> Throws e' (Throws e m) a
 --
--- * Modifying raised exception, including its type:
+-- 2. Modifying raised exception, including its type:
 --
 -- > insideT . mapException
 -- >     :: (Exception e, Exception e1, Exception e2, MonadException m)
 -- >     => (e1 -> e2)
 -- >     -> Throws e (Throws e1 m) a
 -- >     -> Throws e (Throws e2 m) a
+--
+-- Unhiding exception by mapping it in to a different type of exception:
+--
+-- > \ f -> mapException f . liftT
+-- >     :: (Exception e, Exception e', MonadException m)
+-- >     => (e -> e')
+-- >     -> m a
+-- >     -> Throws e' m a
 mapException
     :: (Exception e, Exception e', MonadException m)
     => (e -> e')
