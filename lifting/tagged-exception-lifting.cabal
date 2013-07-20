@@ -1,0 +1,60 @@
+name:               tagged-exception-lifting
+version:            1.0.0.0
+synopsis:
+  Commonly used lifting operations mostly from different kinds of error
+  handling.
+description:
+  Commonly used lifting operations mostly from different kinds of error
+  handling in to API provided by /tagged-exception-core/ package.
+  .
+  Library provides:
+  .
+    * Operations for lifting @Maybe@ and @Either@ in to @MonadException@ context.
+  .
+    * Function @liftIOT@ that is a short hand for @liftT . liftIO@.
+homepage:           https://github.com/trskop/tagged-exception
+bug-reports:        https://github.com/trskop/tagged-exception/issues
+license:            BSD3
+license-file:       LICENSE
+author:             Peter Trsko
+maintainer:         peter.trsko@gmail.com
+copyright:          Copyright (c) 20011, 2013, Peter Trsko
+category:
+    Control
+  , Error Handling
+  , Failure
+  , Monads
+  , Phantom Types
+
+build-type:         Simple
+cabal-version:      >=1.8
+-- Tested-with:
+-- Extra-source-files:
+
+flag pedantic
+  Description:
+    Pass additional flags, including -Werror, to GHC during compilation.
+  Default:          False
+
+library
+  hs-source-dirs:   src
+  exposed-modules:  Control.Monad.TaggedException.Lift
+  -- other-modules:
+  build-depends:
+      base >= 4 && < 4.7
+    -- ^ Tagged-exception-core is capable to handle this range.
+    , tagged-exception-core >= 1.0.0.0 && < 2
+    , transformers >= 0.2 && < 0.4
+    -- ^ Tagged-exception-core is capable to handle this range.
+
+  GHC-options:      -Wall
+  if impl(GHC >= 6.8)
+    GHC-options:    -fwarn-tabs
+  if impl(GHC >= 7.2)
+    GHC-options:    -fwarn-identities
+  if flag(pedantic)
+    GHC-options:    -Werror
+
+source-repository head
+  type:             git
+  location:         git://github.com/trskop/tagged-exception.git
