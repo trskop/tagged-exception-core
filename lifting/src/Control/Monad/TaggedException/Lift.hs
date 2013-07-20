@@ -104,7 +104,7 @@ liftEitherM
 liftEitherM = (`either` return)
 {-# INLINEABLE liftEitherM #-}
 
--- | Short hand for @liftT . liftIO@.
+-- | Type restricted variant of 'liftIO'.
 liftIOT :: (Exception e, MonadException m, MonadIO m) => IO a -> Throws e m a
-liftIOT = liftT . liftIO
+liftIOT = liftIO
 {-# INLINEABLE liftIOT #-}
