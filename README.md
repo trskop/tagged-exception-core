@@ -17,5 +17,8 @@ Packages
   phantom types to tag code that may raise exception.
 * *tagged-exception-instances-comonad* (directory `instances-comonad/`) --
   Comonad instances for *tagged-excpeption-core* package.
+* *tagged-exception-lifting* (directory `lifting/`) -- Commonly used lifting
+  operations mostly from different kinds of error handling in to API provided
+  by *tagged-exception-core* package.
 * *tagged-exception-transformer* (directory `transformer/`) -- Monad
   transformer based on API provided by *tagged-excpeption-core* package.
