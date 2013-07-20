@@ -146,7 +146,8 @@ instance MonadTrans ExceptionT where
 -- | Since @1.2.0.0@.
 instance MFunctor ExceptionT where
     -- Monad m => (forall a. m a -> n a) -> ExceptionT m b -> ExceptionT n b
-    hoist f =  mapExceptionT f
+    hoist f = mapExceptionT f
+        -- Eta reduction is not possible due to rank two type.
 
 -- | Since @1.2.0.0@.
 instance MMonad ExceptionT where
@@ -197,3 +198,6 @@ liftPass = mapExceptionT
     --   Either SomeException (a, w -> w) -> (Either SomeException a, w -> w)
 
 -- }}} Lift other operations --------------------------------------------------
+
+{-# ANN module "HLint: ignore Eta reduce" #-}
+-- ^ Due to MFunctor(hoist) definition.
