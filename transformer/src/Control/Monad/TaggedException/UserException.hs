@@ -20,6 +20,9 @@ module Control.Monad.TaggedException.UserException
     -- ** Examples
     -- $examples
 
+    -- ** Useful functions
+    --
+    -- | These are used for implementation of some of the instances.
     , emptyUserException
     , mapUserException
     , mapUserException2
