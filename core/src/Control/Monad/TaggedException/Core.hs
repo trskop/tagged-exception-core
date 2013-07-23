@@ -533,5 +533,6 @@ embedT :: (Exception e, MonadException m, MonadException m')
     => (m a -> Throws e m' b)
     -> Throws e m a -> Throws e m' b
 embedT = Unsafe.embedT
+{-# INLINE embedT #-}
 
 -- }}} Exception tag -- Combinators -------------------------------------------
