@@ -353,6 +353,22 @@ instance (Monoid w, MonadException m) => MonadException (WS.WriterT w m) where
 -- > writeIfNotEmpty filename str = do
 -- >     when (null str) $ throw EmptyString
 -- >     liftT $ writeFile filename str
+--
+-- We have a some commonly used patterns:
+--
+-- > (liftT .)
+-- >     :: (Exception e, MonadException m)
+-- >     => (a -> m b)
+-- >     -> a -> Throws e m b
+--
+-- Above is also usable for lifting throw-like functions:
+--
+-- > import Control.Monad.Trans.Class (MonadTrans(lift))
+-- >
+-- > ((liftT . lift) .)
+-- >     :: (Exception e, MonadException m, MonadException (t m), MonadTrans t)
+-- >     => (a -> m b)
+-- >     -> a -> Throws e (t m) b
 liftT :: (Exception e, MonadException m) => m a -> Throws e m a
 liftT = Unsafe.throwsOne
 {-# INLINE liftT #-}
@@ -428,10 +444,22 @@ flipT = Unsafe.flipT
 -- >    => Throws e m b
 -- >    -> Throws e (t m) b
 --
+-- Above example can be used when defining 'MonadException' instance for some
+-- monad transformer:
+--
+-- > insideT lift . throw
+-- >     :: (MonadException (t m), MonadException m, Exception e, MonadTrans t)
+-- >     => e
+-- >     -> Throws e (t m) b
+--
+-- This is variation on the first example that explicitly lifts monad:
+--
 -- > insideT WriterT
 -- >     :: (Exception e, MonadException m, Monoid w)
 -- >     => Throws e m (b, w)
 -- >     -> Throws e (WriterT w m) b
+--
+-- Some useful compositions of exception tag combinators:
 --
 -- > insideT flipT
 -- >     :: (Exception e0, Exception e1, Exception e2, MonadException m)
@@ -498,7 +526,9 @@ insideT3
 insideT3 = Unsafe.insideT3
 {-# INLINE insideT3 #-}
 
--- | Since @1.2.0.0@
+-- |
+--
+-- Since @1.2.0.0@
 embedT :: (Exception e, MonadException m, MonadException m')
     => (m a -> Throws e m' b)
     -> Throws e m a -> Throws e m' b
