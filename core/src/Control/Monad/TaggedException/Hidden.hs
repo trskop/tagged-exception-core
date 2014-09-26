@@ -2,7 +2,7 @@
 -- |
 -- Module:       $HEADER$
 -- Description:  Support for hidden exceptions.
--- Copyright:    (c) 2009 - 2013 Peter Trsko
+-- Copyright:    (c) 2009 - 2014 Peter Trsko
 -- License:      BSD3
 --
 -- Stability:    provisional
@@ -48,7 +48,7 @@ module Control.Monad.TaggedException.Hidden
     -- > instance HiddenException UnrecoverableException
     -- >
     -- > hideIOException
-    -- >     :: (MonadException e)
+    -- >     :: (MonadCatch e)
     -- >     => String
     -- >     -> Throws IOException m a
     -- >     -> m a
@@ -59,7 +59,7 @@ module Control.Monad.TaggedException.Hidden
     , throwHidden
     , throw'
     )
-    where
+  where
 
 import Control.Exception (Exception)
 import qualified Control.Exception as E
@@ -84,27 +84,37 @@ import qualified Control.Exception as E
     , RecConError
     , RecSelError
     , RecUpdError
+#if MIN_VERSION_base(4,7,0)
+    , SomeAsyncException
+#endif
     , SomeException
     )
-
 import Data.Dynamic (Dynamic)
 import System.Exit (ExitCode)
 
-import Control.Monad.TaggedException.Internal as Unsafe (hideOne)
-import Control.Monad.TaggedException.Core (MonadException, Throws)
-import qualified Control.Monad.TaggedException.Core as Core (catch, throw)
+import Control.Monad.Catch (MonadCatch, MonadThrow)
+import qualified Control.Monad.Catch as Exceptions
+    ( MonadCatch(catch)
+    , MonadThrow(throwM)
+    )
+
+-- This module depends only on internals and nothing else from this package.
+-- Try, hard, to keep it that way.
+import Control.Monad.TaggedException.Internal.Throws (Throws(Throws))
+import qualified Control.Monad.TaggedException.Internal.Throws as Internal
+    (Throws(hideException))
 
 
 -- | Class for exception that can be removed from the type signature. Default
--- implementation for 'hide' method is provided.
-class (Exception e) => HiddenException e where
+-- implementation for 'hideException' method is provided.
+class Exception e => HiddenException e where
     -- | Hide exception tag.
-    hide :: (MonadException m) => Throws e m a -> m a
-    hide = Unsafe.hideOne
-    {-# INLINE hide #-}
+    hideException :: MonadThrow m => Throws e m a -> m a
+    hideException = Internal.hideException
+    {-# INLINE hideException #-}
 
 -- {{{ HiddenException -- Instances -------------------------------------------
--- (sorted alphabeticaly)
+-- (sorted alphabetically)
 
 instance HiddenException Dynamic
 instance HiddenException E.ArithException
@@ -128,6 +138,9 @@ instance HiddenException E.PatternMatchFail
 instance HiddenException E.RecConError
 instance HiddenException E.RecSelError
 instance HiddenException E.RecUpdError
+#if MIN_VERSION_base(4,7,0)
+instance HiddenException E.SomeAsyncException
+#endif
 instance HiddenException E.SomeException
 instance HiddenException ExitCode
 
@@ -138,24 +151,24 @@ instance HiddenException ExitCode
 -- This is the preferred way to do exception hiding, by mapping it in to a
 -- different exception that better describes its fatality.
 hideWith
-    :: (Exception e, HiddenException e', MonadException m)
+    :: (Exception e, HiddenException e', MonadCatch m)
     => (e -> e')
     -> Throws e m a
     -> m a
-hideWith f = (`Core.catch` throwHidden . f)
+hideWith f (Throws ma) = Exceptions.catch ma (Exceptions.throwM . f)
 
 -- | Throw exceptions and then disregard type tag.
 throwHidden
-    :: (HiddenException e, MonadException m)
+    :: (HiddenException e, MonadThrow m)
     => e
     -> m a
-throwHidden = hide . Core.throw
+throwHidden = Exceptions.throwM
 {-# INLINE throwHidden #-}
 
 -- | Alias for @throwHidden@.
 throw'
-    :: (HiddenException e, MonadException m)
+    :: (HiddenException e, MonadThrow m)
     => e
     -> m a
-throw' = throwHidden
+throw' = Exceptions.throwM
 {-# INLINE throw' #-}

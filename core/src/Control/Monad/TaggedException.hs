@@ -10,10 +10,10 @@ module Control.Monad.TaggedException
     (
     -- * Introduction
     --
-    -- | This library provides interface that is similar to
-    -- /extensible-exceptions/. It introduces 'MonadException' class, which
-    -- uses phantom type to tag code that may raise exception.  Intention is to
-    -- make exceptions explicit and to enforce exception handling.
+    -- | This library provides interface that is similar to base's /Extensible
+    -- Exceptions/. It introduces 'Throws' monad transformer that uses phantom
+    -- type to tag code that may raise exception.  Intention is to make
+    -- exceptions explicit and to enforce exception handling.
     --
     -- This approach is based on commonly used techniques:
     --
@@ -36,8 +36,8 @@ module Control.Monad.TaggedException
 
     -- *** Unification of exception handling
     --
-    -- | Raising and handling exception becomes the same for all
-    -- 'MonadException' instances. This includes code that uses exceptions in
+    -- | Raising and handling exception becomes the same for all 'MonadThrow'
+    -- and 'MonadCatch' instances. This includes code that uses exceptions in
     -- @IO@ monad and @ErrorT@ style error handling. All that can be easily
     -- modified to use API defined by this library.
     --
@@ -66,7 +66,7 @@ module Control.Monad.TaggedException
     -- Instead of function like:
     --
     -- > lookup
-    -- >     :: (Monad m)
+    -- >     :: Monad m
     -- >     => Container Key Value
     -- >     -> Key
     -- >     -> m Value
@@ -74,14 +74,14 @@ module Control.Monad.TaggedException
     -- this library allows to write:
     --
     -- > lookup
-    -- >     :: (MonadException m)
+    -- >     :: MonadThrow m
     -- >     => Container Key Value
     -- >     -> Key
     -- >     -> Throw LookupFailure m Value
     --
     -- where @LookupFailure@ is instance of 'Exception' class. While in some
     -- ways it's similar to using @ErrorT@, it has all the flexibility of
-    -- /extensible-exceptions/ for arbitrary 'MonadException' instance.
+    -- /extensible-exceptions/ for arbitrary 'MonadThrow' instance.
 
     -- ** Dependencies
     --
@@ -89,6 +89,9 @@ module Control.Monad.TaggedException
     -- of current dependencies:
     --
     -- * /base/
+    --
+    -- * /exceptions/: Provides 'MonadThrow', 'MonadCatch' and 'MonadMask'
+    --   type classes.
     --
     -- * /extensible-exceptions/ for /4 >= base < 4.2/
     --
@@ -151,9 +154,6 @@ module Control.Monad.TaggedException
     -- qualified import. See also /Import modules properly/ on /Haskell Wiki/:
     -- <http://www.haskell.org/haskellwiki/Import_modules_properly>.
 
-    -- ** Defining new monad transformer
-    -- $definingMonadTransformer
-
     -- * API documentation
 
     -- ** Library core
@@ -171,13 +171,10 @@ module Control.Monad.TaggedException
     --   ('Exception' e, 'MonadException' m) => m a -> 'Throws' e m a@\" lifts
     --   monadic code in to tagged monadic code.
     --
-    -- * 'MonadException' type class describes basic operations for raising and
-    --   catching exceptions.
-    --
-    -- * Functions defined on top of 'MonadException' methods ('throw', 'catch'
-    --   and 'catch''). In example \"@'handle' :: ('Exception' e,
-    --   'MonadException' m) => (e -> m a) -> 'Throws' e m a -> m a@\" which is
-    --   just flipped version of 'catch'.
+    -- * Functions defined on top of 'MonadThrow' and 'MonadCatch' methods
+    --   ('throw', 'catch' and 'catch''). In example \"@'handle' ::
+    --   ('Exception' e, 'MonadException' m) => (e -> m a) -> 'Throws' e m a
+    --   -> m a@\" which is just flipped version of 'catch'.
       module Control.Monad.TaggedException.Core
 
     -- ** Hidable exceptions
@@ -239,57 +236,15 @@ module Control.Monad.TaggedException
     --   (<http://hackage.haskell.org/package/monad-peel>)
 
     -- * Reexported from @Control.Exception@ module
-    , E.Exception(..)
-        -- Exception class
-    , E.SomeException(..)
-        -- Root exception
-    , E.ArithException(..)
-    , E.ArrayException(..)
-    , E.AssertionFailed(..)
-    , E.AsyncException(..)
-#if MIN_VERSION_base(4,2,0)
-    , E.BlockedIndefinitelyOnMVar(..)
-    , E.BlockedIndefinitelyOnSTM(..)
-#else
-    , E.BlockedIndefinitely(..)
-    , E.BlockedOnDeadMVar(..)
-#endif
-    , E.Deadlock(..)
-    , E.ErrorCall(..)
-    , E.IOException
-    , E.NestedAtomically(..)
-    , E.NoMethodError(..)
-    , E.NonTermination(..)
-    , E.PatternMatchFail(..)
-    , E.RecConError(..)
-    , E.RecSelError(..)
-    , E.RecUpdError(..)
-    )
-    where
-
-import Control.Exception as E
-    ( ArithException(..)
-    , ArrayException(..)
-    , AssertionFailed(..)
-    , AsyncException(..)
-#if MIN_VERSION_base(4,2,0)
-    , BlockedIndefinitelyOnMVar(..)
-    , BlockedIndefinitelyOnSTM(..)
-#else
-    , BlockedIndefinitely(..)
-    , BlockedOnDeadMVar(..)
-#endif
-    , Deadlock(..)
-    , ErrorCall(..)
     , Exception(..)
-    , IOException
-    , NestedAtomically(..)
-    , NoMethodError(..)
-    , NonTermination(..)
-    , PatternMatchFail(..)
-    , RecConError(..)
-    , RecSelError(..)
-    , RecUpdError(..)
+        -- Exception class
+    , SomeException(..)
+        -- Root exception
+    )
+  where
+
+import Control.Exception
+    ( Exception(..)
     , SomeException(..)
     )
 
@@ -331,77 +286,3 @@ import Control.Monad.TaggedException.Utilities
 --
 -- See "Control.Monad.TaggedException.Core" and
 -- "Control.Monad.TaggedException.Hidden" for more examples.
-
--- $definingMonadTransformer
---
--- When creating new monad transformer that will be used in /tagged-exception/
--- context, and won't have 'MonadException' and 'MonadExceptionUtilities'
--- instances, then provide atleast @liftThrow@, @liftCatch@, and @liftMask@
--- functions.
---
--- Lets say we are defining something like:
---
--- > newtype T x m a = ...
---
--- then function for lifting 'throw' will have type:
---
--- > liftThrow
--- >     :: (e -> Throws e m a)
--- >     -> e -> Throws e (T x m) a
---
--- or define @instance MonadTrans (T x)@ and then
--- 'Control.Monad.TaggedException.Unsafe.liftThrow' can be used instead.
---
--- Function @liftCatch@ for lifting 'catch'' (can be also used for @ErrorT@'s
--- @catchError@) will have type:
---
--- > liftCatch
--- >     :: (m a -> (e -> m a) -> m a)
--- >     -> T x m a -> (e -> T x m a) -> T x m a
---
--- And lifting function for masking asynchronous exception will have type like
--- this:
---
--- > liftMask
--- >     :: (forall b. ((forall a. m a -> m a) -> m b) -> m b)
--- >     -> ((forall c. T x m c -> T x m c) -> T x m d) -> T x m d
---
--- Implementation of @liftMask@ for @IdentityT@, @WriterT@ and @StateT@ looks
--- like:
---
--- > liftMask msk f = IdentityT . msk $ \ restore ->
--- >     runIdentityT $ f (IdentityT . restore . runIdentityT)
--- >
--- > liftMask msk f = WriterT . msk $ \ restore ->
--- >     runWriterT $ f (WriterT . restore . runWriterT)
--- >
--- > liftMask msk f = StateT $ \ s -> msk $ \ restore ->
--- >     (`runStateT` s) $ f (\ x -> StateT $ restore . runStateT x)
---
--- If @liftFinally'@, @liftFinally@, @liftBracket'@, and @liftBracket@ can be
--- provided without violating axioms, then these should be provided as well.
--- This functions will have types similar to:
---
--- > liftFinally'
--- >     :: (forall a b. m a -> m b -> m a)
--- >     -> T x m a' -> T x m b' -> T x m a'
--- >
--- > liftFinally
--- >     :: (forall a b. Throws e m a -> m b -> Throws e m a)
--- >     -> Throws e (T x m) a' -> m b' -> Throws e (T x m) a'
--- >
--- > liftBracket'
--- >     :: (forall a b c. m a -> (a -> m b) -> (a -> m c) -> m c)
--- >     -> T x m a' -> (a' -> T x m b') -> (a' -> T x m c') -> T x m c'
--- >
--- > liftBracket
--- >     => (forall a b c.
--- >         m a -> (a -> m b) -> (a -> Throws e m c) -> Throws e m c)
--- >     -> T x m a'
--- >     -> (a' -> T x m b')
--- >     -> (a' -> Throws e (T x m) c')
--- >     -> Throws e (T x m) c'
-
-{-# ANN module "HLint: ignore Use import/export shortcut" #-}
--- ^ For documentation purposes it's better to import and export each module
--- separately.

@@ -1,5 +1,5 @@
 Name:               tagged-exception-core
-Version:            1.2.0.0
+Version:            2.0.0.0
 Synopsis:           Reflect exceptions using phantom types.
 Description:
   This library provides interface similar to /extensible-exceptions/.  It
@@ -17,7 +17,9 @@ Maintainer:         peter.trsko@gmail.com
 Category:
     Control
   , Error Handling
+  , Exceptions
   , Failure
+  , Monad
   , Monads
   , Phantom Types
 
@@ -41,21 +43,23 @@ Library
       Control.Monad.TaggedException
     , Control.Monad.TaggedException.Core
     , Control.Monad.TaggedException.Hidden
+    , Control.Monad.TaggedException.Internal.Throws
     , Control.Monad.TaggedException.Unsafe
     , Control.Monad.TaggedException.Utilities
-  Other-modules:
-      Control.Monad.TaggedException.Internal
-    , Control.Monad.TaggedException.Internal.IO
 
   if flag(base-4_2-4_6)
     Build-depends:
-        base >= 4.2 && < 4.7
+        base >= 4.2 && < 4.8
   else
     Build-depends:
         base >= 4 && < 4.2
       , extensible-exceptions >= 0.1.1.3
   Build-depends:
-      transformers >= 0.2 && < 0.4
+      exceptions > 0.6 && < 0.7
+    -- ^ Interface of this package changed a lot between minor versions,
+    -- therefore trying conservative approach. Dependency introduced in
+    -- tagged-exception-core-2.0.0.0.
+    , transformers >= 0.2 && < 0.4
     , mmorph >= 1.0.0 && < 1.1
     -- ^ Dependency introduced in tagged-exception-core-1.2.0.0.
   GHC-options:      -Wall
