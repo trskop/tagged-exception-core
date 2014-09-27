@@ -25,7 +25,7 @@ Category:
 Build-type:         Simple
 Cabal-version:      >= 1.10
 -- Tested-with:
--- Extra-source-files:
+Extra-source-files: ChangeLog.md
 
 Flag pedantic
   Description:
