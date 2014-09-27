@@ -27,12 +27,15 @@ module Control.Monad.TaggedException.Lift
     )
     where
 
+import Control.Exception (Exception)
 import Control.Monad.IO.Class (MonadIO(liftIO))
 
-import Control.Monad.TaggedException
+import Control.Monad.Catch (MonadThrow)
+
+import Control.Monad.TaggedException (Throws, throw)
 
 
--- | Lift 'Maybe' to some 'MonadException'. Exception as which 'Nothing' is
+-- | Lift 'Maybe' to some 'MonadThrow'. Exception as which 'Nothing' is
 -- interpreted is provided as first argument.
 --
 -- It turned out that common pattern is to use 'Exception's with instances for
@@ -40,12 +43,12 @@ import Control.Monad.TaggedException
 --
 -- @
 -- liftMaybe 'def'
---     :: ('Default' e, 'Exception' e, 'MonadException' m)
+--     :: ('Default' e, 'Exception' e, 'MonadThrow' m)
 --     => 'Maybe' a
 --     -> Throws e m a
 -- @
 liftMaybe
-    :: (Exception e, MonadException m)
+    :: (Exception e, MonadThrow m)
     => e
     -> Maybe a
     -> Throws e m a
@@ -62,23 +65,23 @@ liftMaybeM
 liftMaybeM = (`maybe` return)
 {-# INLINEABLE liftMaybeM #-}
 
--- | Lift 'Either' to some 'MonadException'.
+-- | Lift 'Either' to some 'MonadThrow'.
 --
 -- Lift 'Either' result:
 --
 -- > (>>= liftEither) . liftT
--- >     :: (Exception e, MonadException m)
+-- >     :: (Exception e, MonadThrow m)
 -- >     => m (Either e b)
 -- >     -> Throws e m b
 --
 -- Lift @ErrorT@:
 --
 -- > (>>= liftEither) . liftT . runErrorT
--- >     :: (Exception e, MonadException m)
+-- >     :: (Exception e, MonadThrow m)
 -- >     => ErrorT e m a
 -- >     -> Throws e m a
 liftEither
-    :: (Exception e, MonadException m)
+    :: (Exception e, MonadThrow m)
     => Either e a
     -> Throws e m a
 liftEither = liftEitherWith id
@@ -87,7 +90,7 @@ liftEither = liftEitherWith id
 -- | As 'liftEither', but 'Left' value is mapped to exception using specified
 -- function.  In fact 'liftEither' is @liftEitherWith 'id'@.
 liftEitherWith
-    :: (Exception e, MonadException m)
+    :: (Exception e, MonadThrow m)
     => (a -> e)
     -> Either a b
     -> Throws e m b
@@ -105,6 +108,6 @@ liftEitherM = (`either` return)
 {-# INLINEABLE liftEitherM #-}
 
 -- | Type restricted variant of 'liftIO'.
-liftIOT :: (Exception e, MonadException m, MonadIO m) => IO a -> Throws e m a
+liftIOT :: (Exception e, MonadThrow m, MonadIO m) => IO a -> Throws e m a
 liftIOT = liftIO
 {-# INLINEABLE liftIOT #-}

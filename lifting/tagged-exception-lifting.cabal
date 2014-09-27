@@ -1,5 +1,5 @@
 name:               tagged-exception-lifting
-version:            1.0.0.0
+version:            2.0.0.0
 synopsis:
   Commonly used lifting operations mostly from different kinds of error
   handling.
@@ -35,15 +35,20 @@ flag pedantic
   Description:
     Pass additional flags, including -Werror, to GHC during compilation.
   Default:          False
+  Manual:           True
 
 library
   hs-source-dirs:   src
   exposed-modules:  Control.Monad.TaggedException.Lift
   -- other-modules:
   build-depends:
-      base >= 4 && < 4.7
+      base >= 4 && < 4.8
     -- ^ Tagged-exception-core is capable to handle this range.
-    , tagged-exception-core >= 1.0.0.0 && < 2
+    , exceptions > 0.6 && < 0.7
+    -- ^ Interface of this package changed a lot between minor versions,
+    -- therefore trying conservative approach. Dependency introduced in
+    -- tagged-exception-lifting-2.0.0.0.
+    , tagged-exception-core >= 1.0.0.0 && < 2.1
     , transformers >= 0.2 && < 0.4
     -- ^ Tagged-exception-core is capable to handle this range.
 
