@@ -1,11 +1,11 @@
 {-# LANGUAGE CPP #-}
 -- |
 -- Module:       $HEADER$
--- Copyright:    (c) 2009 - 2013 Peter Trsko
+-- Copyright:    (c) 2009 - 2014 Peter Trsko
 -- License:      BSD3
 --
 -- Stability:    provisional
--- Portability:  non-portable (CPP, depends on non-portable module)
+-- Portability:  non-portable (CPP, depends on non-portable modules)
 module Control.Monad.TaggedException
     (
     -- * Introduction
