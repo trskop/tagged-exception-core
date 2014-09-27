@@ -62,7 +62,7 @@ liftMask
 liftMask msk f = Throws (msk (\restore -> hideException (f (liftT restore))))
   where
     liftT :: (m a -> m a) -> (Throws e m a -> Throws e m a)
-    liftT f (Throws m) = Throws (f m)
+    liftT g (Throws m) = Throws (g m)
 {-# INLINABLE liftMask #-}
 
 -- {{{ Instances --------------------------------------------------------------
