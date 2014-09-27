@@ -234,7 +234,9 @@ onException' = Exceptions.onException
 --
 -- Lifting @m@ to @'Throws' e m@:
 --
--- > import Control.Monad.TaggedException (Exception, Throws, liftT, throw)
+-- > import Control.Exception (Exception)
+-- >
+-- > import Control.Monad.TaggedException (Throws, liftT, throw)
 -- > import Data.Typeable (Typeable)
 -- >
 -- >

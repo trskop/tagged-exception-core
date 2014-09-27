@@ -158,6 +158,18 @@ module Control.Monad.TaggedException
     -- It is recomended to use explicit import list or, as mentioned before,
     -- qualified import. See also /Import modules properly/ on /Haskell Wiki/:
     -- <http://www.haskell.org/haskellwiki/Import_modules_properly>.
+    --
+    -- Classes 'Control.Monad.Catch.MonadCatch',
+    -- 'Control.Monad.Catch.MonadThrow' and 'Control.Monad.Catch.MonadMask'
+    -- aren't reexported. To use them in your type signatures you'll need to
+    -- import them from /exceptions/ package:
+    --
+    -- > import Control.Monad.Catch (MonadCatch, MonadMask, MonadThrow)
+    --
+    -- Same goes for 'Exception' class which is provided by /base/ (or by
+    -- /extensible-exceptions/ for older bases):
+    --
+    -- > import Control.Exception (Exception)
 
     -- * API documentation
 
@@ -233,18 +245,8 @@ module Control.Monad.TaggedException
     --
     -- * <http://hackage.haskell.org/package/monad-peel monad-peel>
 
-    -- * Reexported from @Control.Exception@ module
-    , Exception(..)
-        -- Exception class
-    , SomeException(..)
-        -- Root exception
     )
   where
-
-import Control.Exception
-    ( Exception(..)
-    , SomeException(..)
-    )
 
 import Control.Monad.TaggedException.Core
 import Control.Monad.TaggedException.Hidden
@@ -256,7 +258,9 @@ import Control.Monad.TaggedException.Utilities
 --
 -- > {-# LANGUAGE DeriveDataTypeable #-}
 -- >
--- > import Control.Monad.TaggedException (Exception, Throws)
+-- > import Control.Exception (Exception)
+-- >
+-- > import Control.Monad.TaggedException (Throws)
 -- > import qualified Control.Monad.TaggedException as E (liftT, throw)
 -- > import Data.Typeable (Typeable)
 -- >
