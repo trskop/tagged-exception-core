@@ -59,8 +59,11 @@ liftMask
     :: (((forall a. m a -> m a) -> m b) -> m b)
     -> ((forall a. Throws e m a -> Throws e m a) -> Throws e m b)
     -> Throws e m b
-liftMask msk f = (Throws . msk)
-    (\restore -> (hideException . f) (Throws . restore . hideException))
+liftMask msk f = Throws (msk (\restore -> hideException (f (liftT restore))))
+  where
+    liftT :: (m a -> m a) -> (Throws e m a -> Throws e m a)
+    liftT f (Throws m) = Throws (f m)
+{-# INLINABLE liftMask #-}
 
 -- {{{ Instances --------------------------------------------------------------
 
