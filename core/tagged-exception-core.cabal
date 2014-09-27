@@ -23,7 +23,7 @@ Category:
   , Phantom Types
 
 Build-type:         Simple
-Cabal-version:      >= 1.8
+Cabal-version:      >= 1.10
 -- Tested-with:
 -- Extra-source-files:
 
@@ -33,7 +33,7 @@ Flag pedantic
   Default:          False
   Manual:           True
 
-Flag base-4_2-4_6
+Flag base-ge-4_2
   Description:      Depend on base >= 4.2 && < 4.6.
   Default:          False
 
@@ -47,7 +47,9 @@ Library
     , Control.Monad.TaggedException.Unsafe
     , Control.Monad.TaggedException.Utilities
 
-  if flag(base-4_2-4_6)
+  Default-language: Haskell2010
+
+  if flag(base-ge-4_2)
     Build-depends:
         base >= 4.2 && < 4.8
   else
