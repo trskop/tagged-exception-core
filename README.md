@@ -13,8 +13,9 @@ Packages
 --------
 
 * *tagged-exception-core* (directory `core/`) -- Provides interface similar to
-  *extensible-exceptions*.  It introduces `MonadException` class, which uses
-  phantom types to tag code that may raise exception.
+  *extensible-exceptions*.  `Throws` monad transformer that uses phantom type
+  to tag code that may raise exception.  Intention is to make exceptions
+  explicit and to enforce exception handling.
 * *tagged-exception-instances-comonad* (directory `instances-comonad/`) --
   Comonad instances for *tagged-excpeption-core* package.
 * *tagged-exception-lifting* (directory `lifting/`) -- Commonly used lifting
