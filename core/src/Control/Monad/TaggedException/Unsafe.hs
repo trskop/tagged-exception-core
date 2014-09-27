@@ -48,7 +48,10 @@ module Control.Monad.TaggedException.Unsafe
 import Data.Function ((.), ($))
 import Data.Functor (Functor(fmap))
 
-import Control.Monad.TaggedException.Internal.Throws (Throws(..), liftMask)
+import Control.Monad.TaggedException.Internal.Throws
+    ( Throws(Throws, hideException)
+    , liftMask
+    )
 
 
 -- | Construct exception tag, but without 'Control.Monad.Catch.MonadThrow'

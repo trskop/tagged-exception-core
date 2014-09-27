@@ -2,7 +2,7 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE PolyKinds #-}
 {-# LANGUAGE RankNTypes #-}
-#if MIN_VERSION_base(4,7,0)
+#ifdef KIND_POLYMORPHIC_TYPEABLE
 {-# LANGUAGE DeriveDataTypeable #-}
 #endif
 {-# LANGUAGE DeriveGeneric #-}
@@ -26,11 +26,17 @@ module Control.Monad.TaggedException.Internal.Throws
     )
   where
 
-import Control.Applicative (Alternative(..), Applicative(..))
-import Control.Monad (Monad((>>), (>>=), fail, return), MonadPlus(..))
+import Control.Applicative
+    ( Alternative((<|>), empty, many, some)
+    , Applicative((<*), (<*>), (*>), pure)
+    )
+import Control.Monad
+    ( Monad((>>), (>>=), fail, return)
+    , MonadPlus(mplus, mzero)
+    )
 import Data.Functor (Functor(fmap))
 import Data.Function ((.))
-#if MIN_VERSION_base(4,7,0)
+#ifdef KIND_POLYMORPHIC_TYPEABLE
 import Data.Typeable (Typeable)
 #endif
 import GHC.Generics (Generic)
@@ -38,7 +44,11 @@ import GHC.Generics (Generic)
 import Control.Monad.IO.Class (MonadIO(liftIO))
 import Control.Monad.Trans.Class (MonadTrans(lift))
 
-import Control.Monad.Catch (MonadCatch(..), MonadMask(..), MonadThrow(..))
+import Control.Monad.Catch
+    ( MonadCatch(catch)
+    , MonadMask(mask, uninterruptibleMask)
+    , MonadThrow(throwM)
+    )
 import Control.Monad.Morph (MFunctor(hoist), MMonad(embed))
 
 
@@ -49,7 +59,7 @@ newtype Throws e m a = Throws
     }
   deriving
     ( Generic
-#if MIN_VERSION_base(4,7,0)
+#ifdef KIND_POLYMORPHIC_TYPEABLE
     , Typeable
 #endif
     )
@@ -93,11 +103,15 @@ instance MonadPlus m => MonadPlus (Throws e m) where
     mzero = Throws mzero
     Throws m `mplus` Throws n = Throws (m `mplus` n)
 
+-- {{{ Instances: transformers ------------------------------------------------
+
 instance MonadIO m => MonadIO (Throws e m) where
     liftIO = Throws . liftIO
 
 instance MonadTrans (Throws e) where
     lift = Throws
+
+-- }}} Instances: transformers ------------------------------------------------
 
 -- {{{ Instances: mmorph ------------------------------------------------------
 

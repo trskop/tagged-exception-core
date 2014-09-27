@@ -1,4 +1,5 @@
 {-# LANGUAGE CPP #-}
+{-# LANGUAGE NoImplicitPrelude #-}
 -- |
 -- Module:       $HEADER$
 -- Description:  Support for hidden exceptions.
@@ -6,7 +7,8 @@
 -- License:      BSD3
 --
 -- Stability:    provisional
--- Portability:  non-portable (CPP, depends on non-portable module)
+-- Portability:  non-portable (CPP, NoImplicitPrelude, depends on non-portable
+--               module)
 module Control.Monad.TaggedException.Hidden
     (
     -- * HiddenException class
@@ -90,6 +92,7 @@ import qualified Control.Exception as E
     , SomeException
     )
 import Data.Dynamic (Dynamic)
+import Data.Function ((.))
 import System.Exit (ExitCode)
 
 import Control.Monad.Catch (MonadCatch, MonadThrow)

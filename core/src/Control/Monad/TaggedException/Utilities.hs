@@ -1,3 +1,4 @@
+{-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE RankNTypes #-}
 -- |
 -- Module:       $HEADER$
@@ -6,7 +7,7 @@
 -- License:      BSD3
 --
 -- Stability:    provisional
--- Portability:  non-portable (RankNTypes)
+-- Portability:  non-portable (NoImplicitPrelude, RankNTypes)
 --
 -- Introduces 'MonadExceptionUtilities' type class that provides means for
 -- overriding default implementation of functions like 'bracket'.
@@ -22,7 +23,9 @@ module Control.Monad.TaggedException.Utilities
     )
     where
 
+import Control.Monad (Monad(return))
 import Control.Exception (Exception)
+import Data.Function (($), const)
 
 import Control.Monad.Catch (MonadMask)
 import qualified Control.Monad.Catch as Exceptions

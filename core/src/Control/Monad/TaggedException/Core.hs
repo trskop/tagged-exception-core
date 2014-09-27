@@ -1,3 +1,4 @@
+{-# LANGUAGE NoImplicitPrelude #-}
 -- |
 -- Module:       $HEADER$
 -- Description:  Core functionality.
@@ -5,7 +6,8 @@
 -- License:      BSD3
 --
 -- Stability:    provisional
--- Portability:  non-portable (depends on non-portable modules)
+-- Portability:  non-portable (NoImplicitPrelude, depends on non-portable
+--               modules)
 --
 -- Core functionality.
 module Control.Monad.TaggedException.Core
@@ -44,6 +46,9 @@ module Control.Monad.TaggedException.Core
     where
 
 import Control.Exception (Exception)
+import Data.Either (Either)
+import Data.Function ((.), flip)
+import Data.Functor (Functor)
 
 import Control.Monad.Catch (MonadCatch, MonadThrow)
 import qualified Control.Monad.Catch as Exceptions

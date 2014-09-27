@@ -1,11 +1,14 @@
 {-# LANGUAGE CPP #-}
+{-# LANGUAGE NoImplicitPrelude #-}
+{-# OPTIONS_GHC -fno-warn-missing-import-lists #-}
 -- |
 -- Module:       $HEADER$
 -- Copyright:    (c) 2009 - 2014 Peter Trsko
 -- License:      BSD3
 --
 -- Stability:    provisional
--- Portability:  non-portable (CPP, depends on non-portable modules)
+-- Portability:  non-portable (CPP, NoImplicitPrelude, depends on non-portable
+--               modules)
 module Control.Monad.TaggedException
     (
     -- * Introduction
@@ -35,20 +38,19 @@ module Control.Monad.TaggedException
     -- Some of the benefits of this approach are listed bellow.
 
     -- *** Unification of exception handling
-    --
-    -- | Raising and handling exception becomes the same for all 'MonadThrow'
-    -- and 'MonadCatch' instances. This includes code that uses exceptions in
-    -- @IO@ monad and @ErrorT@ style error handling. All that can be easily
-    -- modified to use API defined by this library.
+
+    -- | Raising and handling exception becomes the same for all
+    -- 'Control.Monad.Catch.MonadThrow' and 'Control.Monad.Catch.MonadCatch'
+    -- instances. This includes code that uses exceptions in @IO@ monad and
+    -- @ErrorT@ style error handling. All that can be easily modified to use
+    -- API defined by this library.
     --
     -- For ilustration there is a great summary of various ways of error
     -- handling in Haskell:
     --
-    -- * /8 ways to report errors in Haskell revisited/
-    --   <http://blog.ezyang.com/2011/08/8-ways-to-report-errors-in-haskell-revisited/>
+    -- * <http://blog.ezyang.com/2011/08/8-ways-to-report-errors-in-haskell-revisited/ 8 ways to report errors in Haskell revisited>
     --
-    -- * /8 ways to report errors in Haskell/
-    --   <http://www.randomhacks.net/articles/2007/03/10/haskell-8-ways-to-report-errors/>
+    -- * <http://www.randomhacks.net/articles/2007/03/10/haskell-8-ways-to-report-errors/ 8 ways to report errors in Haskell>
     --
     -- Posts mentioned above show that any unification or framework for
     -- transforming one error handling technique to another are very benefitial
@@ -90,7 +92,8 @@ module Control.Monad.TaggedException
     --
     -- * /base/
     --
-    -- * /exceptions/: Provides 'MonadThrow', 'MonadCatch' and 'MonadMask'
+    -- * /exceptions/: Provides 'Control.Monad.Catch.MonadThrow',
+    --   'Control.Monad.Catch.MonadCatch' and 'Control.Monad.Catch.MonadMask'
     --   type classes.
     --
     -- * /extensible-exceptions/ for /4 >= base < 4.2/
@@ -103,14 +106,14 @@ module Control.Monad.TaggedException
 
     -- ** Naming conventions
     --
-    -- | Names of basic functions are the same as those in @Control.Exception@
+    -- | Names of basic functions are the same as those in "Control.Exception"
     -- module, but differ in it's type signature.  They operate on tagged code
     -- and are therefore limited to operate only on exceptions specified by the
     -- phantom type.
     --
     -- Exception, to above rule, is 'throw' function which does not throw
-    -- exception from pure code, as does @Control.Exception.throw@, but from
-    -- monadic code.  So, it is more equivalent to @Control.Exception.throwIO@.
+    -- exception from pure code, as does 'Control.Exception.throw', but from
+    -- monadic code.  So, it is more equivalent to 'Control.Exception.throwIO'.
 
     -- *** \<function\> vs. \<function\>'
     --
