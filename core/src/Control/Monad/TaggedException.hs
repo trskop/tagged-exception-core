@@ -29,7 +29,7 @@ module Control.Monad.TaggedException
     -- | Exceptions are one of the fastest and most scalable ways of handling
     -- failures and errors. One of the downsides of exceptions as defined in
     -- Haskell is that they aren't visible in type signatures as in example
-    -- when using @Maybe@ or @ErrorT@.
+    -- when using 'Data.Maybe.Maybe' or 'Control.Monad.Trans.Except.ExceptT'.
     --
     -- This library tries to get rid of this issue by making exceptions
     -- visible. On the other hand it makes things little more complicated, but
@@ -81,9 +81,11 @@ module Control.Monad.TaggedException
     -- >     -> Key
     -- >     -> Throw LookupFailure m Value
     --
-    -- where @LookupFailure@ is instance of 'Exception' class. While in some
-    -- ways it's similar to using @ErrorT@, it has all the flexibility of
-    -- /extensible-exceptions/ for arbitrary 'MonadThrow' instance.
+    -- where @LookupFailure@ is instance of 'Control.Exception.Exception'
+    -- class. While in some ways it's similar to using
+    -- 'Control.Monad.Trans.Except.ExceptT', it has all the flexibility of
+    -- /extensible-exceptions/ for arbitrary 'Control.Monad.Catch.MonadThrow'
+    -- instance.
 
     -- ** Dependencies
     --
@@ -123,8 +125,8 @@ module Control.Monad.TaggedException
     -- operating on exceptions that are different from exception specified by a
     -- phantom type, i.e. hidden ones.
     --
-    -- In case of @IO@ monad, primed functions behave as those from
-    -- @Control.Exception@ module with the same name, but without prime of
+    -- In case of 'System.IO.IO' monad, primed functions behave as those from
+    -- "Control.Exception" module with the same name, but without prime of
     -- course.
 
     -- *** lift\<n\>T vs. liftT\<n\>
@@ -139,13 +141,13 @@ module Control.Monad.TaggedException
 
     -- ** Importing
     --
-    -- | Function 'catch' clashes with @Prelude(catch)@, so either import with
-    -- hidden @Prelude(catch)@:
+    -- | When using older /base/ library function 'catch' clashes with
+    -- @Prelude(catch)@, so either import with hidden @Prelude(catch)@:
     --
     -- > import Prelude hiding (catch)
     -- > import Control.Monad.TaggedException
     --
-    -- or import:
+    -- or use import like:
     --
     -- > import Control.Monad.TaggedException as E
     --
@@ -171,29 +173,27 @@ module Control.Monad.TaggedException
     --   type.
     --
     -- * A lot of combinators for tagged monadic code. In example \"@'liftT' ::
-    --   ('Exception' e, 'MonadException' m) => m a -> 'Throws' e m a@\" lifts
+    --   ('Exception' e, 'MonadThrow' m) => m a -> 'Throws' e m a@\" lifts
     --   monadic code in to tagged monadic code.
     --
-    -- * Functions defined on top of 'MonadThrow' and 'MonadCatch' methods
-    --   ('throw', 'catch' and 'catch''). In example \"@'handle' ::
-    --   ('Exception' e, 'MonadException' m) => (e -> m a) -> 'Throws' e m a
-    --   -> m a@\" which is just flipped version of 'catch'.
+    -- * Functions defined on top of 'Control.Monad.Catch.MonadThrow' and
+    --   'MonadCatch', like 'throw', 'catch' and 'handle'.
       module Control.Monad.TaggedException.Core
 
-    -- ** Hidable exceptions
+    -- ** Hidden exceptions
     --
     -- | Support for hidden/uncaught exceptions.  The ideas behind hiding
     -- thrown exception is:
     --
-    -- 1. Be compatible with /extensible-exceptions/ (@Control.Exception@),
+    -- 1. Be compatible with /extensible-exceptions/ ("Control.Exception"),
     --    in sense that all current @IO@ code doesn't reflect raised
     --    exceptions in it's type.  All standard exceptions, exported by
-    --    @Control.Exception@ module, are instances of 'HidableException'.
+    --    "Control.Exception" module, are instances of 'HiddenException'.
     --
     -- 2. Programs, and their code, are multilayered things.  Sometimes
     --    exceptions aren't ment to be caught in certain layers.  See also
-    --    /Error vs. Exception/ on /Haskell Wiki/
-    --    (<http://www.haskell.org/haskellwiki/Error_vs._Exception>).
+    --    <http://www.haskell.org/haskellwiki/Error_vs._Exception Error vs. Exception>
+    --    on /Haskell Wiki/.
     --
     -- See "Control.Monad.TaggedException.Hidden" for examples.
     , module Control.Monad.TaggedException.Hidden
@@ -207,36 +207,31 @@ module Control.Monad.TaggedException
     -- interfaces and also many others that are dealing with the same problem
     -- domain.  Just to list some:
     --
-    -- * /control-monad-attempt/
-    --   (<http://hackage.haskell.org/package/control-monad-attempt>).
+    -- * <http://hackage.haskell.org/package/control-monad-attempt control-monad-attempt>
     --
-    -- * /control-monad-exception/
-    --   (<http://hackage.haskell.org/package/control-monad-exception>):
+    -- * <http://hackage.haskell.org/package/control-monad-exception control-monad-exception>:
     --   Exception monad transformer with explicitly typed exceptions.
     --
-    -- * /explicit-exception/
-    --   (<http://hackage.haskell.org/package/explicit-exception>): Synchronous
-    --   and Asynchronous exceptions which are explicit in the type signature.
+    -- * <http://hackage.haskell.org/package/explicit-exception explicit-exception>:
+    --   Synchronous and Asynchronous exceptions which are explicit in the type
+    --   signature.
     --
-    -- * /failure/ (<http://hackage.haskell.org/package/failure>) with
-    --   instances for /transformers/
-    --   (<http://hackage.haskell.org/package/transformers>) defined in
-    --   /control-monad-failure/
-    --   (<http://hackage.haskell.org/package/control-monad-failure>).
+    -- * <http://hackage.haskell.org/package/failure failure> with instances
+    --   for <http://hackage.haskell.org/package/transformers transformers>
+    --   defined in
+    --   <http://hackage.haskell.org/package/control-monad-failure control-monad-failure>.
     --
-    -- * /MonadCatchIO-mtl/
-    --   (<http://hackage.haskell.org/package/MonadCatchIO-mtl>) and
-    --   /MonadCatchIO-transformers/
-    --   (<http://hackage.haskell.org/package/MonadCatchIO-transformers>): This
-    --   libraries export @class MonadIO m => MonadCatchIO m@ that catches
-    --   lifting neccessary for exception handling in encapsulated @IO@ monad.
+    -- * <http://hackage.haskell.org/package/MonadCatchIO-mtl MonadCatchIO-mtl>
+    --   and
+    --   <http://hackage.haskell.org/package/MonadCatchIO-transformers MonadCatchIO-transformers>:
+    --   This libraries export @class MonadIO m => MonadCatchIO m@ that catches
+    --   lifting neccessary for exception handling in encapsulated
+    --   'System.IO.IO' monad.
     --
-    -- * /monad-control/
-    --   (<http://hackage.haskell.org/package/monad-control>):
+    -- * <http://hackage.haskell.org/package/monad-control monad-control>:
     --   Based on /monad-peel/.
     --
-    -- * /monad-peel/
-    --   (<http://hackage.haskell.org/package/monad-peel>)
+    -- * <http://hackage.haskell.org/package/monad-peel monad-peel>
 
     -- * Reexported from @Control.Exception@ module
     , Exception(..)
