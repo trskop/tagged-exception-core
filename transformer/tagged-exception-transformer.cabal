@@ -50,9 +50,9 @@ library
     , Control.Monad.TaggedException.ExceptionT
   -- other-modules:
   build-depends:
-      base >= 4 && < 4.7
+      base >= 4 && < 4.8
     -- ^ Tagged-exception-core is capable to handle this range.
-    , tagged-exception-core >= 1.1.0.0 && < 2
+    , tagged-exception-core >= 1.1.0.0 && < 2.1
     , transformers >= 0.2 && < 0.4
     -- ^ Tagged-exception-core is capable to handle this range.
     , mmorph >= 1.0.0 && < 1.1
