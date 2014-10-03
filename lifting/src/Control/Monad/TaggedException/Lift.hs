@@ -37,6 +37,16 @@ import Control.Monad.TaggedException (Throws, throw)
 
 -- {{{ Maybe ------------------------------------------------------------------
 
+-- | Commonly occurring pattern of lifting @'Maybe' a@ in to monadic context.
+-- You can think of it as a 'Monad' variant of 'maybe' function.
+liftMaybeM
+    :: (Monad m)
+    => m a
+    -> Maybe a
+    -> m a
+liftMaybeM = (`maybe` return)
+{-# INLINEABLE liftMaybeM #-}
+
 -- | Lift 'Maybe' to some 'MonadThrow'. Exception as which 'Nothing' is
 -- interpreted is provided as first argument.
 --
@@ -57,19 +67,29 @@ liftMaybe
 liftMaybe = liftMaybeM . throw
 {-# INLINEABLE liftMaybe #-}
 
--- | Commonly occurring pattern of lifting @'Maybe' a@ in to monadic context.
--- You can think of it as a 'Monad' variant of 'maybe' function.
-liftMaybeM
-    :: (Monad m)
-    => m a
-    -> Maybe a
-    -> m a
-liftMaybeM = (`maybe` return)
-{-# INLINEABLE liftMaybeM #-}
-
 -- }}} Maybe ------------------------------------------------------------------
 
 -- {{{ Either -----------------------------------------------------------------
+
+-- | Commonly occurring pattern of lifting @'Either' a b@ in to monadic
+-- context. You can think of it as a 'Monad' variant of 'either' function.
+liftEitherM
+    :: (Monad m)
+    => (a -> m b)
+    -> Either a b
+    -> m b
+liftEitherM = (`either` return)
+{-# INLINEABLE liftEitherM #-}
+
+-- | As 'liftEither', but 'Left' value is mapped to exception using specified
+-- function.  In fact 'liftEither' is @liftEitherWith 'id'@.
+liftEitherWith
+    :: (Exception e, MonadThrow m)
+    => (a -> e)
+    -> Either a b
+    -> Throws e m b
+liftEitherWith = liftEitherM . (throw .)
+{-# INLINEABLE liftEitherWith #-}
 
 -- | Lift 'Either' to some 'MonadThrow'.
 --
@@ -92,26 +112,6 @@ liftEither
     -> Throws e m a
 liftEither = liftEitherWith id
 {-# INLINEABLE liftEither #-}
-
--- | As 'liftEither', but 'Left' value is mapped to exception using specified
--- function.  In fact 'liftEither' is @liftEitherWith 'id'@.
-liftEitherWith
-    :: (Exception e, MonadThrow m)
-    => (a -> e)
-    -> Either a b
-    -> Throws e m b
-liftEitherWith = liftEitherM . (throw .)
-{-# INLINEABLE liftEitherWith #-}
-
--- | Commonly occurring pattern of lifting @'Either' a b@ in to monadic
--- context. You can think of it as a 'Monad' variant of 'either' function.
-liftEitherM
-    :: (Monad m)
-    => (a -> m b)
-    -> Either a b
-    -> m b
-liftEitherM = (`either` return)
-{-# INLINEABLE liftEitherM #-}
 
 -- }}} Either -----------------------------------------------------------------
 
