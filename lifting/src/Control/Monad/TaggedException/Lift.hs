@@ -2,7 +2,7 @@
 -- Module:       $HEADER$
 -- Description:  Commonly used lifting operations mostly from different kinds
 --               of error handling.
--- Copyright:    (c) 2011, 2013 Peter Trsko.
+-- Copyright:    (c) 2011 - 2014 Peter Trško.
 -- License:      BSD3
 --
 -- Stability:    experimental
@@ -35,6 +35,8 @@ import Control.Monad.Catch (MonadThrow)
 import Control.Monad.TaggedException (Throws, throw)
 
 
+-- {{{ Maybe ------------------------------------------------------------------
+
 -- | Lift 'Maybe' to some 'MonadThrow'. Exception as which 'Nothing' is
 -- interpreted is provided as first argument.
 --
@@ -64,6 +66,10 @@ liftMaybeM
     -> m a
 liftMaybeM = (`maybe` return)
 {-# INLINEABLE liftMaybeM #-}
+
+-- }}} Maybe ------------------------------------------------------------------
+
+-- {{{ Either -----------------------------------------------------------------
 
 -- | Lift 'Either' to some 'MonadThrow'.
 --
@@ -106,6 +112,8 @@ liftEitherM
     -> m b
 liftEitherM = (`either` return)
 {-# INLINEABLE liftEitherM #-}
+
+-- }}} Either -----------------------------------------------------------------
 
 -- | Type restricted variant of 'liftIO'.
 liftIOT :: (Exception e, MonadThrow m, MonadIO m) => IO a -> Throws e m a
