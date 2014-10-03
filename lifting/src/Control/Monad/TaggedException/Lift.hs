@@ -19,8 +19,8 @@ module Control.Monad.TaggedException.Lift
     --
     -- | These functions are more generic and have only 'Monad' constraint. Be
     -- aware that they might be removed in the future releases.
-    , liftMaybeM
-    , liftEitherM
+    , fromMaybeM
+    , fromEitherM
 
     -- * Reexported
     , module Control.Monad.TaggedException
@@ -38,14 +38,14 @@ import Control.Monad.TaggedException (Throws, throw)
 -- {{{ Maybe ------------------------------------------------------------------
 
 -- | Commonly occurring pattern of lifting @'Maybe' a@ in to monadic context.
--- You can think of it as a 'Monad' variant of 'maybe' function.
-liftMaybeM
+-- You can think of it as a 'Monad' variant of 'fromMaybe' function.
+fromMaybeM
     :: (Monad m)
     => m a
     -> Maybe a
     -> m a
-liftMaybeM = (`maybe` return)
-{-# INLINEABLE liftMaybeM #-}
+fromMaybeM = (`maybe` return)
+{-# INLINEABLE fromMaybeM #-}
 
 -- | Lift 'Maybe' to some 'MonadThrow'. Exception as which 'Nothing' is
 -- interpreted is provided as first argument.
@@ -64,7 +64,7 @@ liftMaybe
     => e
     -> Maybe a
     -> Throws e m a
-liftMaybe = liftMaybeM . throw
+liftMaybe = fromMaybeM . throw
 {-# INLINEABLE liftMaybe #-}
 
 -- }}} Maybe ------------------------------------------------------------------
@@ -73,13 +73,13 @@ liftMaybe = liftMaybeM . throw
 
 -- | Commonly occurring pattern of lifting @'Either' a b@ in to monadic
 -- context. You can think of it as a 'Monad' variant of 'either' function.
-liftEitherM
+fromEitherM
     :: (Monad m)
     => (a -> m b)
     -> Either a b
     -> m b
-liftEitherM = (`either` return)
-{-# INLINEABLE liftEitherM #-}
+fromEitherM = (`either` return)
+{-# INLINEABLE fromEitherM #-}
 
 -- | As 'liftEither', but 'Left' value is mapped to exception using specified
 -- function.  In fact 'liftEither' is @liftEitherWith 'id'@.
@@ -88,7 +88,7 @@ liftEitherWith
     => (a -> e)
     -> Either a b
     -> Throws e m b
-liftEitherWith = liftEitherM . (throw .)
+liftEitherWith = fromEitherM . (throw .)
 {-# INLINEABLE liftEitherWith #-}
 
 -- | Lift 'Either' to some 'MonadThrow'.
