@@ -52,6 +52,10 @@ library
     , transformers >= 0.2 && < 0.4
     -- ^ Tagged-exception-core is capable to handle this range.
 
+  other-extensions:
+      CPP
+    , NoImplicitPrelude
+
   GHC-options:      -Wall
   if impl(GHC >= 6.8)
     GHC-options:    -fwarn-tabs
