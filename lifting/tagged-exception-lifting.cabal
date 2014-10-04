@@ -18,7 +18,7 @@ license:            BSD3
 license-file:       LICENSE
 author:             Peter Trsko
 maintainer:         peter.trsko@gmail.com
-copyright:          Copyright (c) 2011, 2013, Peter Trsko
+copyright:          Copyright (c) 2011 - 2014, Peter Trsko
 category:
     Control
   , Error Handling
