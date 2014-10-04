@@ -1,4 +1,5 @@
 {-# LANGUAGE CPP #-}
+{-# LANGUAGE NoImplicitPrelude #-}
 -- |
 -- Module:       $HEADER$
 -- Description:  Commonly used lifting operations mostly from different kinds
@@ -7,7 +8,7 @@
 -- License:      BSD3
 --
 -- Stability:    experimental
--- Portability:  CPP
+-- Portability:  CPP, NoImplicitPrelude
 module Control.Monad.TaggedException.Lift
     (
     -- * Exception lifting
@@ -33,7 +34,12 @@ module Control.Monad.TaggedException.Lift
 
 import Control.Applicative (Applicative(pure))
 import Control.Exception (Exception)
+import Control.Monad (Monad(return))
 import Control.Monad.IO.Class (MonadIO(liftIO))
+import Data.Either (Either(..))
+import Data.Function ((.), id)
+import Data.Maybe (Maybe(..))
+import System.IO (IO)
 
 import Control.Monad.Catch (MonadThrow)
 
