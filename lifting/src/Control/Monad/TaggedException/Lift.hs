@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 -- |
 -- Module:       $HEADER$
 -- Description:  Commonly used lifting operations mostly from different kinds
@@ -6,7 +7,7 @@
 -- License:      BSD3
 --
 -- Stability:    experimental
--- Portability:  portable
+-- Portability:  CPP
 module Control.Monad.TaggedException.Lift
     (
     -- * Exception lifting
@@ -15,11 +16,14 @@ module Control.Monad.TaggedException.Lift
     , liftEither
     , liftEitherWith
 
-    -- * Monadic lifting
+    -- * Applicative and Monadic lifting
     --
-    -- | These functions are more generic and have only 'Monad' constraint. Be
-    -- aware that they might be removed in the future releases.
+    -- | These functions are more generic and have only 'Applicative' or
+    -- 'Monad' constraint. Be aware that they might be removed in the future
+    -- releases.
+    , fromMaybeA
     , fromMaybeM
+    , fromEitherA
     , fromEitherM
 
     -- * Reexported
@@ -27,6 +31,7 @@ module Control.Monad.TaggedException.Lift
     )
     where
 
+import Control.Applicative (Applicative(pure))
 import Control.Exception (Exception)
 import Control.Monad.IO.Class (MonadIO(liftIO))
 
@@ -38,13 +43,32 @@ import Control.Monad.TaggedException (Throws, throw)
 -- {{{ Maybe ------------------------------------------------------------------
 
 -- | Commonly occurring pattern of lifting @'Maybe' a@ in to monadic context.
+-- You can think of it as a 'Applicative' variant of 'fromMaybe' function.
+fromMaybeA
+    :: (Applicative f)
+    => f a
+    -> Maybe a
+    -> f a
+fromMaybeA fa Nothing  = fa
+fromMaybeA _  (Just a) = pure a
+{-# INLINEABLE fromMaybeA #-}
+
+-- | Commonly occurring pattern of lifting @'Maybe' a@ in to monadic context.
 -- You can think of it as a 'Monad' variant of 'fromMaybe' function.
+--
+-- For /base >= 4.8/ this function is just type restricted variant of
+-- 'fromMaybeA'.
 fromMaybeM
     :: (Monad m)
     => m a
     -> Maybe a
     -> m a
-fromMaybeM = (`maybe` return)
+#if MIN_VERSION_base(4,8,0)
+fromMaybeM = fromMaybeA
+#else
+fromMaybeM ma Nothing  = ma
+fromMaybeM _  (Just a) = return a
+#endif
 {-# INLINEABLE fromMaybeM #-}
 
 -- | Lift 'Maybe' to some 'MonadThrow'. Exception as which 'Nothing' is
@@ -71,14 +95,34 @@ liftMaybe = fromMaybeM . throw
 
 -- {{{ Either -----------------------------------------------------------------
 
+-- | Commonly occurring pattern of lifting @'Either' a b@ in to applicative
+-- context. You can think of it as a 'Applicative' variant of 'either'
+-- function.
+fromEitherA
+    :: (Applicative f)
+    => (a -> f b)
+    -> Either a b
+    -> f b
+fromEitherA f (Left a)  = f a
+fromEitherA _ (Right b) = pure b
+{-# INLINEABLE fromEitherA #-}
+
 -- | Commonly occurring pattern of lifting @'Either' a b@ in to monadic
 -- context. You can think of it as a 'Monad' variant of 'either' function.
+--
+-- For /base >= 4.8/ this function is just type restricted variant of
+-- 'fromEitherA'.
 fromEitherM
     :: (Monad m)
     => (a -> m b)
     -> Either a b
     -> m b
-fromEitherM = (`either` return)
+#if MIN_VERSION_base(4,8,0)
+fromEitherM = fromEitherA
+#else
+fromEitherM f (Left a)  = f a
+fromEitherM _ (Right b) = return b
+#endif
 {-# INLINEABLE fromEitherM #-}
 
 -- | As 'liftEither', but 'Left' value is mapped to exception using specified
