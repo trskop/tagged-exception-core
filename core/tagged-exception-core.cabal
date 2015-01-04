@@ -61,7 +61,7 @@ Library
     -- ^ Interface of this package changed a lot between minor versions,
     -- therefore trying conservative approach. Dependency introduced in
     -- tagged-exception-core-2.0.0.0.
-    , transformers >= 0.2 && < 0.4
+    , transformers >= 0.2 && < 0.5
     , mmorph >= 1.0.0 && < 1.1
     -- ^ Dependency introduced in tagged-exception-core-1.2.0.0.
 
