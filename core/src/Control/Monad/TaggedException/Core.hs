@@ -2,24 +2,25 @@
 -- |
 -- Module:       $HEADER$
 -- Description:  Core functionality.
--- Copyright:    (c) 2009 - 2014 Peter Trsko.
+-- Copyright:    (c) 2009-2015 Peter Trško
 -- License:      BSD3
 --
 -- Stability:    provisional
--- Portability:  non-portable (NoImplicitPrelude, depends on non-portable
---               modules)
+-- Portability:  NoImplicitPrelude, depends on non-portable modules
 --
 -- Core functionality.
 module Control.Monad.TaggedException.Core
     (
-    -- * MonadException
+    -- * Throw, Catch and Map Exceptions
       throw
     , catch
     , catch'
     , handle
     , handle'
-    , try
     , mapException
+
+    -- ** Specialized Exception Catching
+    , try
     , onException
     , onException'
 
@@ -196,7 +197,7 @@ mapException = flip (catch . flipT . liftT) . (throw .)
 -- | Run computation if exception was raised. Basically:
 --
 -- @
--- m ``onException`` n = 'liftT' m ``catch`` \\e -> 'liftT' n >> 'throw' e
+-- m `onException` n = 'liftT' m `catch` \\e -> 'liftT' n >> 'throw' e
 -- @
 onException
     :: (Exception e, MonadCatch m)
@@ -224,34 +225,38 @@ onException' = Exceptions.onException
 --
 -- Reflect raised exception in function's type:
 --
--- > import Control.Monad.TaggedException (Throws, liftT)
--- > import System.IO (Handle, IOMode)
--- > import qualified System.IO as IO (openFile)
--- >
--- >
--- > openFile :: FilePath -> IOMode -> Throws IOError IO Handle
--- > openFile = (liftT .) . IO.openFile
+-- @
+-- import Control.Monad.TaggedException ('Throws', 'liftT')
+-- import System.IO (Handle, IOMode)
+-- import qualified System.IO as IO (openFile)
+--
+--
+-- openFile :: FilePath -> IOMode -> 'Throws' IOError IO Handle
+-- openFile = ('liftT' .) . IO.openFile
+-- @
 --
 -- Lifting @m@ to @'Throws' e m@:
 --
--- > import Control.Exception (Exception)
--- >
--- > import Control.Monad.TaggedException (Throws, liftT, throw)
--- > import Data.Typeable (Typeable)
--- >
--- >
--- > data EmptyString = EmptyString
--- >     deriving (Show, Typeable)
--- >
--- > instance Exception EmptyString
--- >
--- > writeIfNotEmpty
--- >     :: FilePath
--- >     -> String
--- >     -> Throws EmptyString IO ()
--- > writeIfNotEmpty filename str = do
--- >     when (null str) $ throw EmptyString
--- >     liftT $ writeFile filename str
+-- @
+-- import "Control.Exception" ('Exception')
+--
+-- import Control.Monad.TaggedException ('Throws', 'liftT', 'throw')
+-- import "Data.Typeable" ('Typeable')
+--
+--
+-- data EmptyString = EmptyString
+--     deriving (Show, 'Typeable')
+--
+-- instance 'Exception' EmptyString
+--
+-- writeIfNotEmpty
+--     :: FilePath
+--     -> String
+--     -> 'Throws' EmptyString IO ()
+-- writeIfNotEmpty filename str = do
+--     when (null str) $ 'throw' EmptyString
+--     'liftT' $ writeFile filename str
+-- @
 --
 -- We have a some commonly used patterns:
 --
@@ -265,7 +270,7 @@ onException' = Exceptions.onException
 -- Above is also usable for lifting throw-like functions:
 --
 -- @
--- import Control.Monad.Trans.Class (MonadTrans(lift))
+-- import "Control.Monad.Trans.Class" ('Control.Monad.Trans.Class.MonadTrans'('Control.Monad.Trans.Class.lift'))
 --
 -- (('liftT' . 'Control.Monad.Trans.Class.lift') .)
 --     ::  ( 'Exception' e
@@ -347,17 +352,17 @@ flipT = Unsafe.flipT
 --
 -- @
 -- 'insideT' lift
---    :: ('MonadThrow' (t m), 'MonadThrow' m, 'Exception' e, MonadTrans t)
+--    :: ('MonadThrow' (t m), 'MonadThrow' m, 'Exception' e, 'Control.Monad.Trans.Class.MonadTrans' t)
 --    => 'Throws' e m b
 --    -> 'Throws' e (t m) b
 -- @
 --
 -- This is variation on the first example that explicitly lifts monad:
 --
--- 'insideT' WriterT
---     :: ('Exception' e, 'MonadThrow' m, Monoid w)
+-- 'insideT' 'Control.Monad.Trans.Writer.Lazy.WriterT'
+--     :: ('Exception' e, 'MonadThrow' m, 'Data.Monoid.Monoid' w)
 --     => 'Throws' e m (b, w)
---     -> 'Throws' e (WriterT w m) b
+--     -> 'Throws' e ('Control.Monad.Trans.Writer.Lazy.WriterT' w m) b
 --
 -- Some useful compositions of exception tag combinators:
 --
@@ -386,10 +391,10 @@ insideT = Unsafe.insideT
 -- Usage example:
 --
 -- @
--- 'insideTf' StateT
+-- 'insideTf' 'Control.Monad.Trans.State.Lazy.StateT'
 --     :: ('Exception' e, 'MonadThrow' m)
 --     => (s -> 'Throws' e m (a, s))
---     -> 'Throws' e (StateT s m) a
+--     -> 'Throws' e ('Control.Monad.Trans.State.Lazy.StateT' s m) a
 -- @
 insideTf
     :: (Exception e, Functor f, MonadThrow m, MonadThrow m')
@@ -404,10 +409,10 @@ insideTf = Unsafe.insideTf
 -- Usage example:
 --
 -- @
--- 'insideTf2' RWST
+-- 'insideTf2' 'Control.Monad.Trans.RWS.Lazy.RWST'
 --     :: ('Exception' e, 'MonadThrow' m)
 --     => (r -> s -> 'Throws' e m (a, s, w))
---     -> 'Throws' e (RWST r w s m) a
+--     -> 'Throws' e ('Control.Monad.Trans.RWS.Lazy.RWST' r w s m) a
 -- @
 insideTf2
     :: (Exception e, Functor f, Functor f', MonadThrow m, MonadThrow m')

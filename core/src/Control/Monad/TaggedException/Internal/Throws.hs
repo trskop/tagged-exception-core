@@ -14,8 +14,8 @@
 --
 -- Maintainer:   peter.trsko@gmail.com
 -- Stability:    stable
--- Portability:  non-portable (CPP, NoImplicitPrelude, PolyKinds, RankNTypes
---               DeriveDataTypeable, DeriveGeneric)
+-- Portability:  CPP, NoImplicitPrelude, PolyKinds, RankNTypes,
+--               DeriveDataTypeable, DeriveGeneric
 --
 -- Data type for associating monadic value with phantom type. In case of this
 -- library it will always be associated with a type of exception it may throw.

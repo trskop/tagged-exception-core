@@ -3,11 +3,11 @@
 -- |
 -- Module:       $HEADER$
 -- Description:  MonadExceptionUtilities class and instances.
--- Copyright:    (c) 2009 - 2014 Peter Trsko.
+-- Copyright:    (c) 2009-2014 Peter Trsko.
 -- License:      BSD3
 --
 -- Stability:    provisional
--- Portability:  non-portable (NoImplicitPrelude, RankNTypes)
+-- Portability:  NoImplicitPrelude, RankNTypes
 --
 -- Introduces 'MonadExceptionUtilities' type class that provides means for
 -- overriding default implementation of functions like 'bracket'.

@@ -3,26 +3,25 @@
 {-# OPTIONS_GHC -fno-warn-missing-import-lists #-}
 -- |
 -- Module:       $HEADER$
--- Copyright:    (c) 2009 - 2014 Peter Trsko
+-- Copyright:    (c) 2009-2015 Peter Trško
 -- License:      BSD3
 --
 -- Stability:    provisional
--- Portability:  non-portable (CPP, NoImplicitPrelude, depends on non-portable
---               modules)
+-- Portability:  CPP, NoImplicitPrelude; depends on non-portable modules
 module Control.Monad.TaggedException
     (
     -- * Introduction
     --
-    -- | This library provides interface that is similar to base's /Extensible
-    -- Exceptions/. It introduces 'Throws' monad transformer that uses phantom
-    -- type to tag code that may raise exception.  Intention is to make
-    -- exceptions explicit and to enforce exception handling.
+    -- | This library provides interface that is similar to base's
+    -- "Control.Exception" module. It introduces 'Throws' monad transformer
+    -- that uses phantom type to tag code that may raise exception.  Intention
+    -- is to make exceptions explicit and to enforce exception handling.
     --
     -- This approach is based on commonly used techniques:
     --
-    -- * /Phantom Types/ <http://www.haskell.org/haskellwiki/Phantom_type>
+    -- * <http://www.haskell.org/haskellwiki/Phantom_type HaskellWiki: Phantom Types>
     --
-    -- * /Type Witnesses/ <http://www.haskell.org/haskellwiki/Type_witness>
+    -- * <http://www.haskell.org/haskellwiki/Type_witness HaskellWiki: Type Witnesses>
 
     -- ** Why use this?
     --
@@ -67,19 +66,23 @@ module Control.Monad.TaggedException
     --
     -- Instead of function like:
     --
-    -- > lookup
-    -- >     :: Monad m
-    -- >     => Container Key Value
-    -- >     -> Key
-    -- >     -> m Value
+    -- @
+    -- lookup
+    --     :: 'Control.Monad.Monad' m
+    --     => Container Key Value
+    --     -> Key
+    --     -> m Value
+    -- @
     --
     -- this library allows to write:
     --
-    -- > lookup
-    -- >     :: MonadThrow m
-    -- >     => Container Key Value
-    -- >     -> Key
-    -- >     -> Throw LookupFailure m Value
+    -- @
+    -- lookup
+    --     :: 'Control.Monad.Catch.MonadThrow' m
+    --     => Container Key Value
+    --     -> Key
+    --     -> 'Throws' LookupFailure m Value
+    -- @
     --
     -- where @LookupFailure@ is instance of 'Control.Exception.Exception'
     -- class. While in some ways it's similar to using
@@ -100,7 +103,7 @@ module Control.Monad.TaggedException
     --
     -- * /extensible-exceptions/ for /4 >= base < 4.2/
     --
-    -- * /transformers >= 0.2 && < 0.4/: De facto current standard for monad
+    -- * /transformers >= 0.2 && < 0.5/: De facto current standard for monad
     --   transformers.  Included in newer versions of HaskellPlatform.
     --
     -- * /mmorph/ >= 1.0.0 && < 1.1: Monad morphism utilities.  Currently not
@@ -109,21 +112,34 @@ module Control.Monad.TaggedException
     -- ** Naming conventions
     --
     -- | Names of basic functions are the same as those in "Control.Exception"
-    -- module, but differ in it's type signature.  They operate on tagged code
-    -- and are therefore limited to operate only on exceptions specified by the
+    -- module, but differ in type signature.  They operate on tagged code and
+    -- are therefore limited to operate only on exceptions specified by the
     -- phantom type.
     --
     -- Exception, to above rule, is 'throw' function which does not throw
-    -- exception from pure code, as does 'Control.Exception.throw', but from
-    -- monadic code.  So, it is more equivalent to 'Control.Exception.throwIO'.
+    -- exception from pure code, as does 'Control.Exception.throw' from
+    -- "Control.Exception" module, but from monadic code.  So, it is more
+    -- equivalent to 'Control.Exception.throwIO'.
 
     -- *** \<function\> vs. \<function\>'
     --
-    -- | Functions with prime at the end of there name aren't restricted by the
-    -- phantom type while those without it are.  Functions with prime can
+    -- | Functions with prime at the end of their name aren't restricted by the
+    -- phantom type, while those without it are.  Functions with prime can
     -- therefore operate on arbitrary exceptions.  Use such functions when
     -- operating on exceptions that are different from exception specified by a
     -- phantom type, i.e. hidden ones.
+    --
+    -- Examples:
+    --
+    -- @
+    -- 'catch'
+    --     :: ('Control.Exception.Exception' e, 'Control.Monad.Catch.MonadCatch' m)
+    --     => 'Throws' e m a -> (e -> m a) -> m a
+    --
+    -- 'catch''
+    --     :: ('Control.Exception.Exception' e, 'Control.Monad.Catch.MonadCatch' m)
+    --     => m a -> (e -> m a) -> m a
+    -- @
     --
     -- In case of 'System.IO.IO' monad, primed functions behave as those from
     -- "Control.Exception" module with the same name, but without prime of
@@ -156,8 +172,9 @@ module Control.Monad.TaggedException
     -- > import qualified Control.Monad.TaggedException as E
     --
     -- It is recomended to use explicit import list or, as mentioned before,
-    -- qualified import. See also /Import modules properly/ on /Haskell Wiki/:
-    -- <http://www.haskell.org/haskellwiki/Import_modules_properly>.
+    -- qualified import. See also
+    -- <http://www.haskell.org/haskellwiki/Import_modules_properly Import modules properly>
+    -- on /Haskell Wiki/.
     --
     -- Classes 'Control.Monad.Catch.MonadCatch',
     -- 'Control.Monad.Catch.MonadThrow' and 'Control.Monad.Catch.MonadMask'
@@ -166,8 +183,8 @@ module Control.Monad.TaggedException
     --
     -- > import Control.Monad.Catch (MonadCatch, MonadMask, MonadThrow)
     --
-    -- Same goes for 'Exception' class which is provided by /base/ (or by
-    -- /extensible-exceptions/ for older bases):
+    -- Same goes for 'Control.Exception.Exception' class which is provided by
+    -- /base/ (or by /extensible-exceptions/ for older bases):
     --
     -- > import Control.Exception (Exception)
 
@@ -185,8 +202,9 @@ module Control.Monad.TaggedException
     --   type.
     --
     -- * A lot of combinators for tagged monadic code. In example \"@'liftT' ::
-    --   ('Exception' e, 'MonadThrow' m) => m a -> 'Throws' e m a@\" lifts
-    --   monadic code in to tagged monadic code.
+    --   ('Control.Exception.Exception' e, 'Control.Monad.Catch.MonadThrow' m)
+    --   => m a -> 'Throws' e m a@\" lifts monadic code in to tagged monadic
+    --   code.
     --
     -- * Functions defined on top of 'Control.Monad.Catch.MonadThrow' and
     --   'MonadCatch', like 'throw', 'catch' and 'handle'.
@@ -256,32 +274,34 @@ import Control.Monad.TaggedException.Utilities
 --
 -- Example of reflecting reised exception in type:
 --
--- > {-# LANGUAGE DeriveDataTypeable #-}
--- >
--- > import Control.Exception (Exception)
--- >
--- > import Control.Monad.TaggedException (Throws)
--- > import qualified Control.Monad.TaggedException as E (liftT, throw)
--- > import Data.Typeable (Typeable)
--- >
--- >
--- > data NotReady = NotReady String
--- >     deriving (Show, Typeable)
--- >         -- Both required by Exception class
--- >
--- > instance Exception NotReady
--- >
--- > myFunction :: Input -> Throws NotReady IO Output
--- > myFunction input = do
--- >
--- >     ... some stuff ...
--- >
--- >     -- isReady :: Input -> IO Bool
--- >     ready <- E.liftT $ isReady input
--- >     unless ready
--- >         . E.throw $ NotReady "Resource of myFunction is not ready."
--- >
--- >     ... some other stuff ...
+-- @
+-- {-\# LANGUAGE DeriveDataTypeable #-}
+--
+-- import "Control.Exception" ('Control.Exception.Exception')
+--
+-- import "Control.Monad.TaggedException" ('Throws')
+-- import qualified "Control.Monad.TaggedException" as E ('liftT', 'throw')
+-- import "Data.Typeable" ('Data.Typeable.Typeable')
+--
+--
+-- data NotReady = NotReady String
+--     deriving (Show, 'Data.Typeable.Typeable')
+--         -- Both required by Exception class
+--
+-- instance 'Control.Exception.Exception' NotReady
+--
+-- myFunction :: Input -> 'Throws' NotReady IO Output
+-- myFunction input = do
+--
+--     -- ... some stuff ...
+--
+--     -- isReady :: Input -> IO Bool
+--     ready <- E.'liftT' $ isReady input
+--     unless ready
+--         . E.'throw' $ NotReady \"Resource of myFunction is not ready.\"
+--
+--     -- ... some other stuff ...
+-- @
 --
 -- Caller of this function is forced to catch/handle this exception or reflect
 -- it in it's type too.

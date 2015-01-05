@@ -3,11 +3,11 @@
 -- Module:       $HEADER$
 -- Description:  Unsafe exception tag cobinators and specific lifting
 --               functions.
--- Copyright:    (c) 2009 - 2014 Peter Trsko
+-- Copyright:    (c) 2009-2014 Peter Trsko
 -- License:      BSD3
 --
 -- Stability:    provisional
--- Portability:  non-portable (NoImplicitPrelude)
+-- Portability:  NoImplicitPrelude; depends on non-portable module
 --
 -- Unsafe exception tag cobinators and specific lifting functions. Import this
 -- module if creating new 'MonadException' instance(s) that can not be created
