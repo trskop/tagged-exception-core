@@ -48,6 +48,13 @@ Library
     , Control.Monad.TaggedException.Utilities
 
   Default-language: Haskell2010
+  Other-extensions:
+      CPP
+    , DeriveDataTypeable
+    , DeriveGeneric
+    , NoImplicitPrelude
+    , PolyKinds
+    , RankNTypes
 
   if flag(base-ge-4_2)
     Build-depends:
