@@ -16,7 +16,7 @@ explicit and to enforce exception handling.
 Tagged Exceptions Core
 ======================
 
-[![Hackage](http://img.shields.io/hackage/v/tagged-exceptions-core.svg)][Hackage: tagged-exceptions-core]
+[![Hackage](http://img.shields.io/hackage/v/tagged-exception-core.svg)][Hackage: tagged-exception-core]
 
 
 Description
@@ -26,9 +26,9 @@ Basic definitions with very stable API.
 
 
 
-[Hackage: tagged-exceptions-core]:
-  http://hackage.haskell.org/package/tagged-exceptions-core
-  "tagged-exceptions-core package on Hackage"
+[Hackage: tagged-exception-core]:
+  http://hackage.haskell.org/package/tagged-exception-core
+  "tagged-exception-core package on Hackage"
 [Haskell.org]:
   http://www.haskell.org
   "The Haskell Programming Language"
