@@ -1,6 +1,10 @@
 Tagged Exceptions
 =================
 
+[![Haskell Programming Language](https://img.shields.io/badge/language-Haskell-blue.svg)][Haskell.org]
+[![BSD3 License](http://img.shields.io/badge/license-BSD3-brightgreen.svg)][tl;dr Legal: BSD3]
+
+
 Description
 -----------
 
@@ -9,17 +13,25 @@ types to tag code that may raise exception(s).  Intention is to make exceptions
 explicit and to enforce exception handling.
 
 
-Packages
---------
+Tagged Exceptions Core
+======================
 
-* *tagged-exception-core* (directory `core/`) -- Provides interface similar to
-  *extensible-exceptions*.  `Throws` monad transformer that uses phantom type
-  to tag code that may raise exception.  Intention is to make exceptions
-  explicit and to enforce exception handling.
-* *tagged-exception-instances-comonad* (directory `instances-comonad/`) --
-  Comonad instances for *tagged-excpeption-core* package.
-* *tagged-exception-lifting* (directory `lifting/`) -- Commonly used lifting
-  operations mostly from different kinds of error handling in to API provided
-  by *tagged-exception-core* package.
-* *tagged-exception-transformer* (directory `transformer/`) -- Monad
-  transformer based on API provided by *tagged-excpeption-core* package.
+[![Hackage](http://img.shields.io/hackage/v/tagged-exceptions-core.svg)][Hackage: tagged-exceptions-core]
+
+
+Description
+-----------
+
+Basic definitions with very stable API.
+
+
+
+[Hackage: tagged-exceptions-core]:
+  http://hackage.haskell.org/package/tagged-exceptions-core
+  "tagged-exceptions-core package on Hackage"
+[Haskell.org]:
+  http://www.haskell.org
+  "The Haskell Programming Language"
+[tl;dr Legal: BSD3]:
+  https://tldrlegal.com/license/bsd-3-clause-license-%28revised%29
+  "BSD 3-Clause License (Revised)"
