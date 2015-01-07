@@ -29,7 +29,8 @@ category:
 build-type:         Simple
 cabal-version:      >=1.10
 -- Tested-with:
--- Extra-source-files:
+
+Extra-source-files: ChangeLog.md
 
 flag pedantic
   Description:
