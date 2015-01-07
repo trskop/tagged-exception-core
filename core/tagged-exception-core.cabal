@@ -28,8 +28,7 @@ Cabal-version:      >= 1.10
 Extra-source-files: ChangeLog.md
 
 Flag pedantic
-  Description:
-    Pass additional flags, including -Werror, to GHC during compilation.
+  Description:      Pass additional flags to GHC.
   Default:          False
   Manual:           True
 
@@ -76,15 +75,12 @@ Library
     CPP-options:    -DKIND_POLYMORPHIC_TYPEABLE
 
   GHC-options:      -Wall
-  if impl(GHC >= 6.8)
-    GHC-options:    -fwarn-tabs
-  if impl(GHC >= 7.2)
-    GHC-options:    -fwarn-identities
   if flag(pedantic)
     GHC-options:
+      -fwarn-tabs
       -fwarn-implicit-prelude
       -fwarn-missing-import-lists
-      -Werror
+--    -Werror
 
 source-repository head
   type:             git

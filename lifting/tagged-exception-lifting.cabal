@@ -33,8 +33,7 @@ cabal-version:      >=1.10
 Extra-source-files: ChangeLog.md
 
 flag pedantic
-  Description:
-    Pass additional flags, including -Werror, to GHC during compilation.
+  Description:      Pass additional flags to GHC.
   Default:          False
   Manual:           True
 
@@ -60,12 +59,11 @@ library
     , NoImplicitPrelude
 
   GHC-options:      -Wall
-  if impl(GHC >= 6.8)
-    GHC-options:    -fwarn-tabs
-  if impl(GHC >= 7.2)
-    GHC-options:    -fwarn-identities
   if flag(pedantic)
-    GHC-options:    -Werror
+    GHC-options:
+      -fwarn-implicit-prelude
+      -fwarn-missing-import-lists
+--    -Werror
 
 source-repository head
   type:             git
