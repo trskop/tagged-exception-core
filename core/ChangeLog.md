@@ -1,5 +1,12 @@
 # ChangeLog / ReleaseNotes
 
+
+## Version \<next\>
+
+* Bumping transformers bounds to include 0.4.* versions.
+* Documentation updates.
+
+
 ## Version 2.0.0.0
 
 * Rewritten to use classes from [exceptions][] package.
