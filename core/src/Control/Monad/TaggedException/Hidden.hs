@@ -124,13 +124,8 @@ instance HiddenException E.ArithException
 instance HiddenException E.ArrayException
 instance HiddenException E.AssertionFailed
 instance HiddenException E.AsyncException
-#if MIN_VERSION_base(4,2,0)
 instance HiddenException E.BlockedIndefinitelyOnMVar
 instance HiddenException E.BlockedIndefinitelyOnSTM
-#else
-instance HiddenException E.BlockedIndefinitely
-instance HiddenException E.BlockedOnDeadMVar
-#endif
 instance HiddenException E.Deadlock
 instance HiddenException E.ErrorCall
 instance HiddenException E.IOException

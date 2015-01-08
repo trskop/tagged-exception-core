@@ -3,7 +3,9 @@
 
 ## Version \<next\>
 
-* Bumping transformers bounds to include 0.4.* versions.
+* Bumping transformers bounds to include 0.4.\* versions.
+* Dropped last threads of support for base <= 4.5; it hadn't worked anyway
+  since exceptions==0.6 depend on base >=4.5 && <5.
 * Documentation updates.
 
 
