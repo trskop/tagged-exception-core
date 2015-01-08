@@ -2,15 +2,14 @@
 {-# LANGUAGE RankNTypes #-}
 -- |
 -- Module:       $HEADER$
--- Description:  MonadExceptionUtilities class and instances.
+-- Description:  Utility functions built on top of core API.
 -- Copyright:    (c) 2009-2014 Peter Trsko.
 -- License:      BSD3
 --
 -- Stability:    provisional
 -- Portability:  NoImplicitPrelude, RankNTypes
 --
--- Introduces 'MonadExceptionUtilities' type class that provides means for
--- overriding default implementation of functions like 'bracket'.
+-- Utility functions built on top of core API.
 module Control.Monad.TaggedException.Utilities
     (
       bracket
