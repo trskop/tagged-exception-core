@@ -3,7 +3,7 @@
 -- Module:       $HEADER$
 -- Description:  Unsafe exception tag cobinators and specific lifting
 --               functions.
--- Copyright:    (c) 2009-2014 Peter Trsko
+-- Copyright:    (c) 2009-2015 Peter Trsko
 -- License:      BSD3
 --
 -- Stability:    provisional
@@ -42,6 +42,7 @@ module Control.Monad.TaggedException.Unsafe
     , liftBindLike
     , liftFlipBindLike
     , liftKleisliLike
+    , liftCCLike
     )
     where
 
@@ -226,3 +227,19 @@ liftKleisliLike
     :: ((a -> m a') -> (b -> m b') -> c -> m c')
     -> (a -> Throws e m a') -> (b -> Throws e m b') -> c -> Throws e m c'
 liftKleisliLike f g h = Throws . f (hideException . g) (hideException . h)
+
+-- | Lift operation with type similar to 'Control.Monad.Cont.Class.liftCC':
+--
+-- @
+-- 'Control.Monad.Cont.Class.liftCC'
+--     :: 'Control.Monad.Monad' m => ((a -> m b) -> m a) -> m a
+-- @
+--
+-- Since @2.0.1.0@
+liftCCLike
+    :: (((a -> m b) -> m' c) -> m'' d)
+    -> ((a -> Throws e m b) -> Throws e m' c) -> Throws e m'' d
+liftCCLike f g = Throws (f (\h -> hideException (g (Throws . h))))
+  -- f :: ((a -> m b) -> m c) -> m d
+  -- g :: (a -> Throws e m b) -> Throws e m c
+  -- \h -> hideException (g (Throws . h) :: (a -> m b) -> m c
