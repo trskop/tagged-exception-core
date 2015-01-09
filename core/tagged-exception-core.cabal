@@ -25,7 +25,10 @@ Category:
 Build-type:         Simple
 Cabal-version:      >= 1.10
 -- Tested-with:
-Extra-source-files: ChangeLog.md
+
+Extra-source-files:
+    ChangeLog.md
+  , README.md
 
 Flag pedantic
   Description:      Pass additional flags to GHC.
