@@ -22,6 +22,8 @@
 module Control.Monad.TaggedException.Internal.Throws
     (
       Throws(..)
+    , liftBindLike
+    , liftCCLike
     , liftMask
     )
   where
@@ -64,7 +66,51 @@ newtype Throws e m a = Throws
 #endif
     )
 
--- | Lift @mask@ operation in to 'Throws' context.
+-- | Lift operations with type similar to monadic bind. In example:
+--
+-- @
+-- ('Control.Monad.>>=') :: 'Control.Monad.Monad' m => m a -> (a -> m b) -> m b
+-- @
+--
+-- @
+-- 'Prelude.catch'
+--     :: 'System.IO.IO' a
+--     -> ('Control.Exception.IOError' -> 'System.IO.IO' a)
+--     -> 'System.IO.IO' a
+-- @
+--
+-- @
+-- 'Control.Exception.catch'
+--     :: 'Control.Exception.Exception' e
+--     => 'System.IO.IO' a -> (e -> 'System.IO.IO' a) -> 'System.IO.IO' a
+-- @
+--
+-- Since @1.2.0.0@.
+liftBindLike
+    :: (m a -> (b -> m c) -> m d)
+    -> Throws e m a
+    -> (b -> Throws e m c)
+    -> Throws e m d
+liftBindLike f x g = Throws (f (hideException x) (hideException . g))
+{-# INLINE liftBindLike #-}
+
+-- | Lift operation with type similar to 'Control.Monad.Cont.Class.liftCC':
+--
+-- @
+-- 'Control.Monad.Cont.Class.liftCC'
+--     :: 'Control.Monad.Monad' m => ((a -> m b) -> m a) -> m a
+-- @
+--
+-- Since @2.0.1.0@
+liftCCLike
+    :: (((a -> m b) -> m' c) -> m'' d)
+    -> ((a -> Throws e m b) -> Throws e m' c) -> Throws e m'' d
+liftCCLike f g = Throws (f (\h -> hideException (g (Throws . h))))
+  -- f :: ((a -> m b) -> m c) -> m d
+  -- g :: (a -> Throws e m b) -> Throws e m c
+  -- \h -> hideException (g (Throws . h) :: (a -> m b) -> m c
+{-# INLINE liftCCLike #-}
+
 liftMask
     :: (((forall a. m a -> m a) -> m b) -> m b)
     -> ((forall a. Throws e m a -> Throws e m a) -> Throws e m b)
@@ -139,7 +185,7 @@ instance MonadThrow m => MonadThrow (Throws e m) where
 -- | Since @2.0.0.0@.
 instance MonadCatch m => MonadCatch (Throws e m) where
     -- :: Exception e' => Throws m a -> (e' -> Throws m a) -> Throws m a
-    catch (Throws ma) f = Throws (catch ma (hideException . f))
+    catch = liftBindLike catch
 
 -- | Since @2.0.0.0@.
 instance MonadMask m => MonadMask (Throws e m) where

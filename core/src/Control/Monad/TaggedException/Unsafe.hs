@@ -165,33 +165,6 @@ flipT = throwsTwo . hideTwo
 embedT :: (m a -> Throws e n b) -> Throws e m a -> Throws e n b
 embedT = (. hideException)
 
--- | Lift operations with type similar to monadic bind. In example:
---
--- @
--- ('Control.Monad.>>=') :: 'Control.Monad.Monad' m => m a -> (a -> m b) -> m b
--- @
---
--- @
--- 'Prelude.catch'
---     :: 'System.IO.IO' a
---     -> ('Control.Exception.IOError' -> 'System.IO.IO' a)
---     -> 'System.IO.IO' a
--- @
---
--- @
--- 'Control.Exception.catch'
---     :: 'Control.Exception.Exception' e
---     => 'System.IO.IO' a -> (e -> 'System.IO.IO' a) -> 'System.IO.IO' a
--- @
---
--- Since @1.2.0.0@.
-liftBindLike
-    :: (m a -> (b -> m c) -> m d)
-    -> Throws e m a
-    -> (b -> Throws e m c)
-    -> Throws e m d
-liftBindLike f x g = throwsOne $ f (hideException x) (hideException . g)
-
 -- | Lift operations with type similar to flipped monadic bind. In example:
 --
 -- @
@@ -227,19 +200,3 @@ liftKleisliLike
     :: ((a -> m a') -> (b -> m b') -> c -> m c')
     -> (a -> Throws e m a') -> (b -> Throws e m b') -> c -> Throws e m c'
 liftKleisliLike f g h = Throws . f (hideException . g) (hideException . h)
-
--- | Lift operation with type similar to 'Control.Monad.Cont.Class.liftCC':
---
--- @
--- 'Control.Monad.Cont.Class.liftCC'
---     :: 'Control.Monad.Monad' m => ((a -> m b) -> m a) -> m a
--- @
---
--- Since @2.0.1.0@
-liftCCLike
-    :: (((a -> m b) -> m' c) -> m'' d)
-    -> ((a -> Throws e m b) -> Throws e m' c) -> Throws e m'' d
-liftCCLike f g = Throws (f (\h -> hideException (g (Throws . h))))
-  -- f :: ((a -> m b) -> m c) -> m d
-  -- g :: (a -> Throws e m b) -> Throws e m c
-  -- \h -> hideException (g (Throws . h) :: (a -> m b) -> m c
