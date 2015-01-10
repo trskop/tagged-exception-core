@@ -116,7 +116,7 @@ liftBindLike f x g = Throws (f (hideException x) (hideException . g))
 --     :: 'Control.Monad.Monad' m => ((a -> m b) -> m a) -> m a
 -- @
 --
--- Since @2.0.1.0@
+-- Since @2.1.0.0@
 liftCCLike
     :: (((a -> m b) -> m' c) -> m'' d)
     -> ((a -> Throws e m b) -> Throws e m' c) -> Throws e m'' d
