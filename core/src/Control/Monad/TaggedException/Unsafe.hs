@@ -43,6 +43,8 @@ module Control.Monad.TaggedException.Unsafe
     , liftFlipBindLike
     , liftKleisliLike
     , liftCCLike
+    , liftHoistLike
+    , liftEmbedLike
     )
     where
 
@@ -51,6 +53,10 @@ import Data.Functor (Functor(fmap))
 
 import Control.Monad.TaggedException.Internal.Throws
     ( Throws(Throws, hideException)
+    , liftBindLike
+    , liftCCLike
+    , liftEmbedLike
+    , liftHoistLike
     , liftMask
     )
 

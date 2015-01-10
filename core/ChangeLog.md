@@ -8,12 +8,20 @@
   since [exceptions][] ==0.6 depend on base >=4.5 && <5.
 * Instances for [mtl][] >=2.1 package. Package [exceptions][] already depends
   on [mtl][], so it doesn't make sense to shy away from them.
-* Introduced unsafe function:
+* Introduced unsafe functions:
 
     ````Haskell
     liftCCLike
         :: (((a -> m b) -> m' c) -> m'' d)
         -> ((a -> Throws e m b) -> Throws e m' c) -> Throws e m'' d
+
+    liftEmbedLike
+        :: (forall a. m a -> Throws e n a)
+        -> Throws e' m b -> Throws e n b
+
+    liftHoistLike
+        :: (forall a. m a -> n a)
+        -> Throws e m b -> Throws e' n b
     ```
 
 * Documentation updates.

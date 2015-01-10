@@ -17,7 +17,7 @@
 -- |
 -- Module:       $HEADER$
 -- Description:  Data type for associating monadic value with phantom type.
--- Copyright:    (c) 2009 - 2014 Peter Trsko
+-- Copyright:    (c) 2009 - 2015 Peter Trsko
 -- License:      BSD3
 --
 -- Maintainer:   peter.trsko@gmail.com
@@ -30,8 +30,11 @@
 module Control.Monad.TaggedException.Internal.Throws
     (
       Throws(..)
+
     , liftBindLike
     , liftCCLike
+    , liftEmbedLike
+    , liftHoistLike
     , liftMask
     )
   where
@@ -213,17 +216,33 @@ instance MonadCont m => MonadCont (Throws e m) where
 
 -- {{{ Instances: mmorph ------------------------------------------------------
 
+-- | Generalized form of 'embed' from @instance 'MFunctor' ('Throws' e)@.
+--
+-- Since @2.1.0.0@
+liftHoistLike :: (forall a. m a -> n a) -> Throws e m b -> Throws e' n b
+liftHoistLike f x = Throws (f (hideException x))
+{-# INLINE liftHoistLike #-}
+
+-- | Generalized form of 'embed' from @instance 'MMonad' ('Throws' e)@.
+--
+-- Since @2.1.0.0@
+liftEmbedLike
+    :: (forall a. m a -> Throws e n a)
+    -> Throws e' m b -> Throws e n b
+liftEmbedLike f x = f (hideException x)
+{-# INLINE liftEmbedLike #-}
+
 -- | Since @1.2.0.0@.
 instance MFunctor (Throws e) where
     -- :: Monad m => (forall a. m a -> n a) -> Throws e m b -> Throws e n b
-    hoist f x =  Throws (f (hideException x))
+    hoist = liftHoistLike
 
 -- | Since @1.2.0.0@.
 instance MMonad (Throws e) where
     -- :: Monad n
     -- => (forall a. m a -> Throws e n a)
     -- -> Throws e m b -> Throws e n b
-    embed f x = f (hideException x)
+    embed = liftEmbedLike
 
 -- }}} Instances: mmorph ------------------------------------------------------
 
