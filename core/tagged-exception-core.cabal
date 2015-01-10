@@ -1,5 +1,13 @@
 Name:               tagged-exception-core
+
+-- http://www.haskell.org/haskellwiki/Package_versioning_policy
+--
+--                  ,-+------- breaking API changes
+--                  | | ,----- non-breaking API additions
+--                  | | | ,--- code changes with no API change
+--                  V V V V
 Version:            2.1.0.0
+
 Synopsis:           Reflect exceptions using phantom types.
 Description:
   This library provides interface similar to /extensible-exceptions/.  It
@@ -50,9 +58,12 @@ Library
       CPP
     , DeriveDataTypeable
     , DeriveGeneric
+    , FlexibleInstances
+    , MultiParamTypeClasses
     , NoImplicitPrelude
     , PolyKinds
     , RankNTypes
+    , UndecidableInstances
 
   Build-depends:
     -- {{{ Distributed with GHC or Haskell Platform ---------------------------
