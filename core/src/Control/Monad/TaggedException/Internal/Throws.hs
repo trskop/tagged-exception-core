@@ -6,6 +6,14 @@
 {-# LANGUAGE DeriveDataTypeable #-}
 #endif
 {-# LANGUAGE DeriveGeneric #-}
+
+-- Following extensions are required for mtl type classes:
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE UndecidableInstances #-}
+-- Originally there was a separate package that defined these instances and it
+-- used orphan instances.
+
 -- |
 -- Module:       $HEADER$
 -- Description:  Data type for associating monadic value with phantom type.
@@ -38,13 +46,20 @@ import Control.Monad
     )
 import Data.Functor (Functor(fmap))
 import Data.Function ((.))
+import Data.Monoid (Monoid)
 #ifdef KIND_POLYMORPHIC_TYPEABLE
 import Data.Typeable (Typeable)
 #endif
 import GHC.Generics (Generic)
 
+import Control.Monad.Cont.Class (MonadCont(callCC))
+import Control.Monad.Error.Class (MonadError(catchError, throwError))
 import Control.Monad.IO.Class (MonadIO(liftIO))
+import Control.Monad.Reader.Class (MonadReader(ask, local, reader))
+import Control.Monad.RWS.Class (MonadRWS)
+import Control.Monad.State.Class (MonadState(get, put, state))
 import Control.Monad.Trans.Class (MonadTrans(lift))
+import Control.Monad.Writer.Class (MonadWriter(listen, pass, tell, writer))
 
 import Control.Monad.Catch
     ( MonadCatch(catch)
@@ -158,6 +173,43 @@ instance MonadTrans (Throws e) where
     lift = Throws
 
 -- }}} Instances: transformers ------------------------------------------------
+
+-- {{{ Instances: mtl ---------------------------------------------------------
+
+-- | Since @2.1.0.0@
+instance (Monoid w, MonadWriter w m) => MonadWriter w (Throws e m) where
+    writer = Throws . writer
+    tell   = Throws . tell
+    listen (Throws x) = Throws (listen x)
+    pass   (Throws x) = Throws (pass   x)
+
+-- | Since @2.1.0.0@
+instance MonadState s m => MonadState s (Throws e m) where
+    get   = Throws get
+    put   = Throws . put
+    state = Throws . state
+
+-- | Since @2.1.0.0@
+instance MonadReader r m => MonadReader r (Throws e m) where
+    ask = Throws ask
+    local f (Throws x) = Throws (local f x)
+    reader = Throws . reader
+
+-- | Since @2.1.0.0@
+instance (Monoid w, MonadReader r m, MonadWriter w m, MonadState s m)
+    => MonadRWS r w s (Throws e m)
+
+-- | Since @2.1.0.0@
+instance MonadError e m => MonadError e (Throws e' m) where
+    throwError = Throws . throwError
+    catchError = liftBindLike catchError
+
+-- | Since @2.1.0.0@
+instance MonadCont m => MonadCont (Throws e m) where
+    -- :: ((a -> Throws e m b) -> Throws e m a) -> Throws e m a
+    callCC = liftCCLike callCC
+
+-- {{{ Instances: mtl ---------------------------------------------------------
 
 -- {{{ Instances: mmorph ------------------------------------------------------
 

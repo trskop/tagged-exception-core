@@ -68,6 +68,10 @@ Library
     -- tagged-exception-core-2.0.0.0.
     , mmorph >= 1.0.0 && < 1.1
     -- ^ Dependency introduced in tagged-exception-core-1.2.0.0.
+    , mtl >=2.1 && <2.3
+    -- ^ Dependency introduced in tagged-exception-core-2.0.1.0.
+    -- Package exceptions already depends on it so it doesn't make sense to
+    -- avoid defining instances for mtl classes.
 
   if impl(ghc >= 7.8.1)
     CPP-options:    -DKIND_POLYMORPHIC_TYPEABLE
