@@ -16,10 +16,10 @@ Description:
   exception handling.
 Homepage:           https://github.com/trskop/tagged-exception
 Bug-reports:        https://github.com/trskop/tagged-exception/issues
-Copyright:          Copyright (c) 2009 - 2015, Peter Trsko
+Copyright:          Copyright (c) 2009-2015, Peter Trško
 License:            BSD3
 License-file:       LICENSE
-Author:             Peter Trsko
+Author:             Peter Trško
 Maintainer:         peter.trsko@gmail.com
 Category:
     Control
