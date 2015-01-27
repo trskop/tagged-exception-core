@@ -1,28 +1,14 @@
-Tagged Exceptions
-=================
+# Tagged Exception Core
 
+[![Hackage](http://img.shields.io/hackage/v/tagged-exception-core.svg)][Hackage: tagged-exception-core]
 [![Haskell Programming Language](https://img.shields.io/badge/language-Haskell-blue.svg)][Haskell.org]
 [![BSD3 License](http://img.shields.io/badge/license-BSD3-brightgreen.svg)][tl;dr Legal: BSD3]
 
 
-Description
------------
+## Description
 
-Set of Haskell libraries that are centered around the idea of using phantom
-types to tag code that may raise exception(s).  Intention is to make exceptions
-explicit and to enforce exception handling.
-
-
-Tagged Exceptions Core
-======================
-
-[![Hackage](http://img.shields.io/hackage/v/tagged-exception-core.svg)][Hackage: tagged-exception-core]
-
-
-Description
------------
-
-Basic definitions with very stable API.
+Reflect exceptions using phantom types. This library provides core API and
+others may build on top of it.
 
 
 
