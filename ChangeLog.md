@@ -3,12 +3,13 @@
 
 ## Version 2.1.0.0
 
-* Bumping transformers bounds to include 0.4.\* versions.
+* Builds on GHC from 7.4 to 7.10, later with base 4.8. (change)
+* Bumping transformers bounds to include 0.4.\* versions. (change)
 * Dropped last threads of support for base <= 4.5; it hadn't worked anyway
-  since [exceptions][] ==0.6 depend on base >=4.5 && <5.
+  since [exceptions][] ==0.6 depend on base >=4.5 && <5. (breaking change)
 * Instances for [mtl][] >=2.1 package. Package [exceptions][] already depends
-  on [mtl][], so it doesn't make sense to shy away from them.
-* Introduced unsafe functions:
+  on [mtl][], so it doesn't make sense to shy away from them. (new)
+* Introduced unsafe functions (new):
 
     ````Haskell
     liftCCLike
@@ -24,7 +25,9 @@
         -> Throws e m b -> Throws e' n b
     ```
 
-* Documentation updates.
+* Documentation updates. (new)
+* Uploaded to [Hackage][]:
+  <http://hackage.haskell.org/package/tagged-exception-core-2.1.0.0>
 
 
 ## Version 2.0.0.0
