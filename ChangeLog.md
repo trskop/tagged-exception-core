@@ -1,5 +1,13 @@
 # ChangeLog / ReleaseNotes
 
+## Version 2.1.0.1
+
+* Relaxing upper bound on [exceptions][] package to include versions up to
+  0.8.\*. (new)
+* Not uploaded on to [Hackage][], instead opted to modify package metadata of
+  <http://hackage.haskell.org/package/tagged-exception-core-2.1.0.0 2.1.0.0>
+  release.
+
 
 ## Version 2.1.0.0
 
@@ -47,3 +55,6 @@
 [mtl]:
   http://hackage.haskell.org/package/mtl
   "mtl package on Hackage"
+[exceptions]:
+  http://hackage.haskell.org/package/exceptions
+  "exceptions package on Hackage"
