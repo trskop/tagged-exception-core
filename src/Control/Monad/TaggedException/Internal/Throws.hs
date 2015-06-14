@@ -5,7 +5,9 @@
 #ifdef KIND_POLYMORPHIC_TYPEABLE
 {-# LANGUAGE DeriveDataTypeable #-}
 #endif
+#ifdef GHC_GENERICS
 {-# LANGUAGE DeriveGeneric #-}
+#endif
 
 -- Following extensions are required for mtl type classes:
 {-# LANGUAGE FlexibleInstances #-}
@@ -53,7 +55,9 @@ import Data.Monoid (Monoid)
 #ifdef KIND_POLYMORPHIC_TYPEABLE
 import Data.Typeable (Typeable)
 #endif
+#ifdef GHC_GENERICS
 import GHC.Generics (Generic)
+#endif
 
 import Control.Monad.Cont.Class (MonadCont(callCC))
 import Control.Monad.Error.Class (MonadError(catchError, throwError))
@@ -77,12 +81,15 @@ newtype Throws e m a = Throws
     { hideException :: m a
     -- ^ Hide one exception.
     }
+#ifdef GHC_GENERICS
+    -- GHC Generics were introduced earlier then polykinded Typeable.
   deriving
     ( Generic
 #ifdef KIND_POLYMORPHIC_TYPEABLE
     , Typeable
 #endif
     )
+#endif
 
 -- | Lift operations with type similar to monadic bind. In example:
 --
