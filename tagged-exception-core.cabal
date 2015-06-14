@@ -7,8 +7,8 @@ Description:
   introduces @Throws@ monad transformer that uses phantom type to tag code that
   may raise exception.  Intention is to make exceptions explicit and to enforce
   exception handling.
-Homepage:           https://github.com/trskop/tagged-exception
-Bug-reports:        https://github.com/trskop/tagged-exception/issues
+Homepage:           https://github.com/trskop/tagged-exception-core
+Bug-reports:        https://github.com/trskop/tagged-exception-core/issues
 Copyright:          Copyright (c) 2009-2015, Peter Trško
 License:            BSD3
 License-file:       LICENSE
