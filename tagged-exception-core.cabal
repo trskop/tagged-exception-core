@@ -66,10 +66,13 @@ Library
     -- ^ Based on dependencies of mtl==2.1 and mtl==2.2.1
     -- }}} Distributed with GHC or Haskell Platform ---------------------------
 
-    , exceptions > 0.6 && < 0.7
+    , exceptions > 0.6 && < 0.9
     -- ^ Interface of this package changed a lot between minor versions,
     -- therefore trying conservative approach. Dependency introduced in
     -- tagged-exception-core-2.0.0.0.
+    --
+    -- From the used API view, there has been little changes between 0.6.1 and
+    -- 0.8.0.2 (newest at the time of writing).
     , mmorph >= 1.0.0 && < 1.1
     -- ^ Dependency introduced in tagged-exception-core-1.2.0.0.
     , mtl >=2.1 && <2.3
