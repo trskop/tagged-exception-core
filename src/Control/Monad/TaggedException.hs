@@ -25,9 +25,10 @@ module Control.Monad.TaggedException
     -- ** Why use this?
     --
     -- | Exceptions are one of the fastest and most scalable ways of handling
-    -- failures and errors. One of the downsides of exceptions as defined in
-    -- Haskell is that they aren't visible in type signatures as in example
-    -- when using 'Data.Maybe.Maybe' or 'Control.Monad.Trans.Except.ExceptT'.
+    -- failures and errors. One of the downsides of exceptions, as defined in
+    -- Haskell, is that they aren't visible in type signatures. This is in
+    -- direct contrast to, in example, 'Data.Maybe.Maybe' or
+    -- 'Control.Monad.Trans.Except.ExceptT'.
     --
     -- This library tries to get rid of this issue by making exceptions
     -- visible. On the other hand it makes things little more complicated, but
@@ -58,7 +59,7 @@ module Control.Monad.TaggedException
     --
     -- | Sometimes @'Monad'('fail')@ is used to generalize exception handling.
     -- While it provides a generalized interface it also introduces controversy
-    -- that sorrounds 'fail'.
+    -- that surrounds 'fail'.
     --
     -- This library allows usege of similar approach without using 'fail' and
     -- with explicitly visible exception.
@@ -88,6 +89,9 @@ module Control.Monad.TaggedException
     -- 'Control.Monad.Trans.Except.ExceptT', it has all the flexibility of
     -- /extensible-exceptions/ for arbitrary 'Control.Monad.Catch.MonadThrow'
     -- instance.
+    --
+    -- One of the consequences of this approach is that exceptions are now
+    -- explicit part of the API.
 
     -- ** Dependencies
     --

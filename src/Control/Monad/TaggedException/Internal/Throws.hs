@@ -136,6 +136,7 @@ liftCCLike f g = Throws (f (\h -> hideException (g (Throws . h))))
   -- \h -> hideException (g (Throws . h) :: (a -> m b) -> m c
 {-# INLINE liftCCLike #-}
 
+-- | Lift operation similar to the one of 'Control.Exception.mask'.
 liftMask
     :: (((forall a. m a -> m a) -> m b) -> m b)
     -> ((forall a. Throws e m a -> Throws e m a) -> Throws e m b)
