@@ -3,7 +3,7 @@
 -- |
 -- Module:       $HEADER$
 -- Description:  Support for hidden exceptions.
--- Copyright:    (c) 2009 - 2014 Peter Trsko
+-- Copyright:    (c) 2009-2015, Peter Trško
 -- License:      BSD3
 --
 -- Stability:    provisional
@@ -65,7 +65,12 @@ module Control.Monad.TaggedException.Hidden
 
 import Control.Exception (Exception)
 import qualified Control.Exception as E
+#if MIN_VERSION_base(4,8,0)
+    ( AllocationLimitExceeded
+    , ArithException
+#else
     ( ArithException
+#endif
     , ArrayException
     , AssertionFailed
     , AsyncException
@@ -120,6 +125,9 @@ class Exception e => HiddenException e where
 -- (sorted alphabetically)
 
 instance HiddenException Dynamic
+#if MIN_VERSION_base(4,8,0)
+instance HiddenException E.AllocationLimitExceeded
+#endif
 instance HiddenException E.ArithException
 instance HiddenException E.ArrayException
 instance HiddenException E.AssertionFailed
