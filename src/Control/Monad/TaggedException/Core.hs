@@ -2,7 +2,7 @@
 -- |
 -- Module:       $HEADER$
 -- Description:  Core functionality.
--- Copyright:    (c) 2009-2015 Peter Trško
+-- Copyright:    (c) 2009-2015, Peter Trško
 -- License:      BSD3
 --
 -- Stability:    provisional

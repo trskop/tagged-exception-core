@@ -19,7 +19,7 @@
 -- |
 -- Module:       $HEADER$
 -- Description:  Data type for associating monadic value with phantom type.
--- Copyright:    (c) 2009 - 2015 Peter Trsko
+-- Copyright:    (c) 2009-2015, Peter Trško
 -- License:      BSD3
 --
 -- Maintainer:   peter.trsko@gmail.com

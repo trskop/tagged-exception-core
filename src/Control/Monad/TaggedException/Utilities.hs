@@ -3,7 +3,7 @@
 -- |
 -- Module:       $HEADER$
 -- Description:  Utility functions built on top of core API.
--- Copyright:    (c) 2009-2014 Peter Trsko.
+-- Copyright:    (c) 2009-2014, Peter Trško
 -- License:      BSD3
 --
 -- Stability:    provisional

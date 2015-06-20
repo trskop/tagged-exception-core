@@ -3,7 +3,7 @@
 -- Module:       $HEADER$
 -- Description:  Unsafe exception tag cobinators and specific lifting
 --               functions.
--- Copyright:    (c) 2009-2015 Peter Trsko
+-- Copyright:    (c) 2009-2015, Peter Trško
 -- License:      BSD3
 --
 -- Stability:    provisional

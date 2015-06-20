@@ -2,7 +2,7 @@
 {-# OPTIONS_GHC -fno-warn-missing-import-lists #-}
 -- |
 -- Module:       $HEADER$
--- Copyright:    (c) 2009-2015 Peter Trško
+-- Copyright:    (c) 2009-2015, Peter Trško
 -- License:      BSD3
 --
 -- Stability:    provisional
