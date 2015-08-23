@@ -232,7 +232,11 @@ module Control.Monad.TaggedException
     , module Control.Monad.TaggedException.Hidden
 
     -- ** Asynchronous exceptions and bracket family of functions
-    , module Control.Monad.TaggedException.Utilities
+    --
+    -- | These functions are exported as part of
+    -- "Control.Monad.TaggedException.Core" module, there is also module
+    -- "Control.Monad.TaggedException.Utilities", which reexports only
+    -- functions that make use of 'Control.Monad.Catch.MonadMask' type class.
 
     -- * Some related work
     --
@@ -271,7 +275,6 @@ module Control.Monad.TaggedException
 
 import Control.Monad.TaggedException.Core
 import Control.Monad.TaggedException.Hidden
-import Control.Monad.TaggedException.Utilities
 
 -- $usage
 --

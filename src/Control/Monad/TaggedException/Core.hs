@@ -1,4 +1,5 @@
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE RankNTypes #-}
 -- |
 -- Module:       $HEADER$
 -- Description:  Core functionality.
@@ -24,6 +25,15 @@ module Control.Monad.TaggedException.Core
     , onException
     , onException'
 
+    -- * Utilities
+    , bracket
+    , bracket'
+    , bracket_
+    , bracketOnError
+    , bracketOnError'
+    , finally
+    , finally'
+
     -- * Exception tag
     , Throws
 
@@ -47,11 +57,12 @@ module Control.Monad.TaggedException.Core
     where
 
 import Control.Exception (Exception)
+import Control.Monad (Monad(return))
 import Data.Either (Either)
-import Data.Function ((.), flip)
+import Data.Function ((.), ($), const, flip)
 import Data.Functor (Functor)
 
-import Control.Monad.Catch (MonadCatch, MonadThrow)
+import Control.Monad.Catch (MonadCatch, MonadMask, MonadThrow)
 import qualified Control.Monad.Catch as Exceptions
 
 import Control.Monad.TaggedException.Internal.Throws (Throws(Throws))
@@ -65,6 +76,7 @@ import qualified Control.Monad.TaggedException.Unsafe as Unsafe
     , insideTf2
     , joinT
     , joinT3
+    , liftMask
     , liftT1
     , liftT2
     , liftT3
@@ -449,3 +461,153 @@ embedT = Unsafe.embedT
 {-# INLINE embedT #-}
 
 -- }}} Exception tag -- Combinators -------------------------------------------
+
+-- {{{ Utilities --------------------------------------------------------------
+
+mask' :: MonadMask m => ((forall a. m a -> m a) -> m b) -> m b
+mask' = Exceptions.mask
+
+mask
+    :: (Exception e, MonadMask m)
+    => ((forall a. Throws e m a -> Throws e m a) -> Throws e m b)
+    -> Throws e m b
+mask = Unsafe.liftMask Exceptions.mask
+
+-- | Run computation afeter another even if exception was thrown. See also
+-- 'finally'', 'onException' and 'onException''.
+--
+-- Default implementation:
+--
+-- > m `finally` n = mask $ \ restore -> do
+-- >     r <- restore m `onException` n
+-- >     _ <- liftT n
+-- >     return r
+finally
+    :: (Exception e, MonadMask m)
+    => Throws e m a
+    -- ^ Computation to run first
+    -> m b
+    -- ^ Computation to run afterward (even if exception @e@ was raised)
+    -> Throws e m a
+    -- ^ Returns the result of the first computation
+m `finally` n = mask $ \restore -> do
+    r <- restore m `onException` n
+    _ <- liftT n
+    return r
+
+-- | Run computation afeter another even if exception was thrown. See also
+-- 'finally', 'onException' and 'onException''.
+finally'
+    :: MonadMask m
+    => m a
+    -- ^ Computation to run first
+    -> m b
+    -- ^ Computation to run afterward (even if some exception was raised)
+    -> m a
+    -- ^ Returns the result of the first computation
+finally' = Exceptions.finally
+
+-- | Run computation surrounded by acquire and release computations. The
+-- release computation is executed even if \"in-between\" computation
+-- raises exception. See also 'bracket'', 'bracket_', 'bracketOnError',
+-- and 'bracketOnError''.
+bracket
+    :: (Exception e, MonadMask m)
+    => m a
+    -- ^ Computation to run before
+    -> (a -> m b)
+    -- ^ Computation to run after
+    -> (a -> Throws e m c)
+    -- ^ Computation to run in-between
+    -> Throws e m c
+    -- ^ Result of the in-between computation
+bracket acq rel go = mask $ \ restore -> do
+    x <- liftT acq
+    r <- restore (go x) `onException` rel x
+    _ <- liftT $ rel x
+    return r
+
+-- | Run computation surrounded by acquire and release computations. The
+-- release computation is executed even if \"in-between\" computation
+-- raises exception. See also 'bracket', 'bracket_', 'bracketOnError', and
+-- 'bracketOnError''.
+--
+-- Default implementation:
+--
+-- > bracket' acq rel go = mask' $ \ restore -> do
+-- >     x <- acq
+-- >     r <- restore (go x) `onException'` rel x
+-- >     _ <- rel x
+-- >     return r
+bracket'
+    :: MonadMask m
+    => m a
+    -- ^ Computation to run before
+    -> (a -> m b)
+    -- ^ Computation to run after
+    -> (a -> m c)
+    -- ^ Computation to run in-between
+    -> m c
+    -- ^ Result of the in-between computation
+bracket' = Exceptions.bracket
+
+-- | Version of 'bracket' where \"after\" computation is executed only if
+-- \"in-between\" computation raises exception.
+--
+-- Default implementation:
+--
+-- > bracketOnError acq rel go = mask $ \ restore -> do
+-- >     x <- liftT acq
+-- >     restore (go x) `onException` rel x
+bracketOnError
+    :: (Exception e, MonadMask m)
+    => m a
+    -- ^ Computation to run before
+    -> (a -> m b)
+    -- ^ Computation to run after if an exception was raised
+    -> (a -> Throws e m c)
+    -- ^ Computation to run in-between
+    -> Throws e m c
+    -- ^ Result of the in-between computation
+bracketOnError acq rel go = mask $ \ restore -> do
+    x <- liftT acq
+    restore (go x) `onException` rel x
+
+-- | Version of 'bracket' where \"after\" computation is executed only if
+-- \"in-between\" computation raises exception.
+--
+-- Default implementation:
+--
+-- > bracketOnError' acq rel go = mask' $ \ restore -> do
+-- >     x <- liftT acq
+-- >     restore (go x) `onException'` rel x
+bracketOnError'
+    :: MonadMask m
+    => m a
+    -- ^ Computation to run before
+    -> (a -> m b)
+    -- ^ Computation to run after if an exception was raised
+    -> (a -> m c)
+    -- ^ Computation to run in-between
+    -> m c
+    -- ^ Result of the in-between computation
+bracketOnError' acq rel go = mask' $ \ restore -> do
+    x <- acq
+    restore (go x) `onException'` rel x
+
+-- | Variant of 'bracket'.
+--
+-- > bracket_ acq rel go = bracket acq (const rel) (const go)
+bracket_
+    :: (Exception e, MonadMask m)
+    => m a
+    -- ^ Computation to run before
+    -> m b
+    -- ^ Computation to run after
+    -> Throws e m c
+    -- ^ Computation to run in-between
+    -> Throws e m c
+    -- ^ Result of the in-between computation
+bracket_ acq rel go = bracket acq (const rel) (const go)
+
+-- }}} Utilities --------------------------------------------------------------
