@@ -1,11 +1,19 @@
 # ChangeLog / ReleaseNotes
 
+
+## Version NEXT
+
+* Deprecating module `Control.Monad.TaggedException.Utilities`,
+  definitions from it were moved in to `Control.Monad.TaggedException.Core`.
+  (change)
+
+
 ## Version 2.1.0.1
 
 * Relaxing upper bound on [exceptions][] package to include versions up to
   0.8.\*. (new)
 * Not uploaded on to [Hackage][], instead opted to modify package metadata of
-  <http://hackage.haskell.org/package/tagged-exception-core-2.1.0.0 2.1.0.0>
+  [2.1.0.0](http://hackage.haskell.org/package/tagged-exception-core-2.1.0.0)
   release.
 
 
