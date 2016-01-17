@@ -95,6 +95,9 @@ import qualified Control.Exception as E
     , SomeAsyncException
 #endif
     , SomeException
+#if MIN_VERSION_base(4,9,0)
+    , TypeError
+#endif
     )
 import Data.Dynamic (Dynamic)
 import Data.Function ((.))
@@ -154,6 +157,9 @@ instance HiddenException E.SomeException
 instance HiddenException ExitCode
 #if MIN_VERSION_base(4,8,0)
 instance HiddenException Void
+#endif
+#if MIN_VERSION_base(4,9,0)
+instance HiddenException TypeError
 #endif
 
 -- }}} HiddenException -- Instances -------------------------------------------
