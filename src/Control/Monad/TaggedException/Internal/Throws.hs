@@ -56,7 +56,12 @@ import Data.Monoid (Monoid)
 import Data.Typeable (Typeable)
 #endif
 #ifdef GHC_GENERICS
-import GHC.Generics (Generic, Generic1)
+import GHC.Generics
+    ( Generic
+#if __GLASGOW_HASKELL__ >= 710
+    , Generic1
+    )
+#endif
 #endif
 
 import Control.Monad.Cont.Class (MonadCont(callCC))
@@ -85,7 +90,9 @@ newtype Throws e m a = Throws
     -- GHC Generics were introduced earlier then polykinded Typeable.
   deriving
     ( Generic
+#if __GLASGOW_HASKELL__ >= 710
     , Generic1
+#endif
 #ifdef KIND_POLYMORPHIC_TYPEABLE
     , Typeable
 #endif
