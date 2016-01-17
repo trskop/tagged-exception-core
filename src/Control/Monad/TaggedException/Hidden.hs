@@ -3,7 +3,7 @@
 -- |
 -- Module:       $HEADER$
 -- Description:  Support for hidden exceptions.
--- Copyright:    (c) 2009-2015, Peter Trško
+-- Copyright:    (c) 2009-2016, Peter Trško
 -- License:      BSD3
 --
 -- Stability:    provisional
@@ -98,6 +98,9 @@ import qualified Control.Exception as E
     )
 import Data.Dynamic (Dynamic)
 import Data.Function ((.))
+#if MIN_VERSION_base(4,8,0)
+import Data.Void (Void)
+#endif
 import System.Exit (ExitCode)
 
 import Control.Monad.Catch (MonadCatch, MonadThrow)
@@ -149,6 +152,7 @@ instance HiddenException E.SomeAsyncException
 #endif
 instance HiddenException E.SomeException
 instance HiddenException ExitCode
+instance HiddenException Void
 
 -- }}} HiddenException -- Instances -------------------------------------------
 
