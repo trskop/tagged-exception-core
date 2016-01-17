@@ -19,7 +19,7 @@
 -- |
 -- Module:       $HEADER$
 -- Description:  Data type for associating monadic value with phantom type.
--- Copyright:    (c) 2009-2015, Peter Trško
+-- Copyright:    (c) 2009-2016, Peter Trško
 -- License:      BSD3
 --
 -- Maintainer:   peter.trsko@gmail.com
@@ -56,7 +56,7 @@ import Data.Monoid (Monoid)
 import Data.Typeable (Typeable)
 #endif
 #ifdef GHC_GENERICS
-import GHC.Generics (Generic)
+import GHC.Generics (Generic, Generic1)
 #endif
 
 import Control.Monad.Cont.Class (MonadCont(callCC))
@@ -85,6 +85,7 @@ newtype Throws e m a = Throws
     -- GHC Generics were introduced earlier then polykinded Typeable.
   deriving
     ( Generic
+    , Generic1
 #ifdef KIND_POLYMORPHIC_TYPEABLE
     , Typeable
 #endif
