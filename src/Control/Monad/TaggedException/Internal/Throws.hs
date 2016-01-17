@@ -60,8 +60,8 @@ import GHC.Generics
     ( Generic
 #if __GLASGOW_HASKELL__ >= 710
     , Generic1
-    )
 #endif
+    )
 #endif
 
 import Control.Monad.Cont.Class (MonadCont(callCC))
