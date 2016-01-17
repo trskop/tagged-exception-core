@@ -152,7 +152,9 @@ instance HiddenException E.SomeAsyncException
 #endif
 instance HiddenException E.SomeException
 instance HiddenException ExitCode
+#if MIN_VERSION_base(4,8,0)
 instance HiddenException Void
+#endif
 
 -- }}} HiddenException -- Instances -------------------------------------------
 
