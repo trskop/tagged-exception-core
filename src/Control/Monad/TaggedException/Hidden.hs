@@ -131,9 +131,6 @@ class Exception e => HiddenException e where
 -- (sorted alphabetically)
 
 instance HiddenException Dynamic
-#if MIN_VERSION_base(4,8,0)
-instance HiddenException E.AllocationLimitExceeded
-#endif
 instance HiddenException E.ArithException
 instance HiddenException E.ArrayException
 instance HiddenException E.AssertionFailed
@@ -150,16 +147,20 @@ instance HiddenException E.PatternMatchFail
 instance HiddenException E.RecConError
 instance HiddenException E.RecSelError
 instance HiddenException E.RecUpdError
+instance HiddenException E.SomeException
+instance HiddenException ExitCode
+
 #if MIN_VERSION_base(4,7,0)
 instance HiddenException E.SomeAsyncException
 #endif
-instance HiddenException E.SomeException
-instance HiddenException ExitCode
+
 #if MIN_VERSION_base(4,8,0)
+instance HiddenException E.AllocationLimitExceeded
 instance HiddenException Void
 #endif
+
 #if MIN_VERSION_base(4,9,0)
-instance HiddenException TypeError
+instance HiddenException E.TypeError
 #endif
 
 -- }}} HiddenException -- Instances -------------------------------------------
