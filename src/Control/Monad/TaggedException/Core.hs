@@ -3,7 +3,7 @@
 -- |
 -- Module:       $HEADER$
 -- Description:  Core functionality.
--- Copyright:    (c) 2009-2015, Peter Trško
+-- Copyright:    (c) 2009-2016, Peter Trško
 -- License:      BSD3
 --
 -- Stability:    provisional
@@ -453,7 +453,7 @@ insideT3 = Unsafe.insideT3
 
 -- |
 --
--- Since @1.2.0.0@
+-- /Since 1.2.0.0/
 embedT :: (Exception e, MonadThrow m, MonadThrow m')
     => (m a -> Throws e m' b)
     -> Throws e m a -> Throws e m' b
@@ -476,12 +476,14 @@ mask = Unsafe.liftMask Exceptions.mask
 -- | Run computation afeter another even if exception was thrown. See also
 -- 'finally'', 'onException' and 'onException''.
 --
--- Default implementation:
+-- Implemented as:
 --
--- > m `finally` n = mask $ \ restore -> do
--- >     r <- restore m `onException` n
--- >     _ <- liftT n
--- >     return r
+-- @
+-- m ``finally`` n = 'mask' $ \\restore -> do
+--     r <- restore m ``onException`` n
+--     _ <- 'liftT' n
+--     return r
+-- @
 finally
     :: (Exception e, MonadMask m)
     => Throws e m a
@@ -532,13 +534,15 @@ bracket acq rel go = mask $ \ restore -> do
 -- raises exception. See also 'bracket', 'bracket_', 'bracketOnError', and
 -- 'bracketOnError''.
 --
--- Default implementation:
+-- Implementated as:
 --
--- > bracket' acq rel go = mask' $ \ restore -> do
--- >     x <- acq
--- >     r <- restore (go x) `onException'` rel x
--- >     _ <- rel x
--- >     return r
+-- @
+-- 'bracket'' acq rel go = 'mask'' $ \\restore -> do
+--     x <- acq
+--     r <- restore (go x) ``onException'`` rel x
+--     _ <- rel x
+--     return r
+-- @
 bracket'
     :: MonadMask m
     => m a
@@ -554,11 +558,13 @@ bracket' = Exceptions.bracket
 -- | Version of 'bracket' where \"after\" computation is executed only if
 -- \"in-between\" computation raises exception.
 --
--- Default implementation:
+-- Implemented as:
 --
--- > bracketOnError acq rel go = mask $ \ restore -> do
--- >     x <- liftT acq
--- >     restore (go x) `onException` rel x
+-- @
+-- 'bracketOnError' acq rel go = 'mask' $ \\restore -> do
+--     x <- 'liftT' acq
+--     restore (go x) ``onException`` rel x
+-- @
 bracketOnError
     :: (Exception e, MonadMask m)
     => m a
@@ -576,11 +582,13 @@ bracketOnError acq rel go = mask $ \ restore -> do
 -- | Version of 'bracket' where \"after\" computation is executed only if
 -- \"in-between\" computation raises exception.
 --
--- Default implementation:
+-- Implemented as:
 --
--- > bracketOnError' acq rel go = mask' $ \ restore -> do
--- >     x <- liftT acq
--- >     restore (go x) `onException'` rel x
+-- @
+-- 'bracketOnError'' acq rel go = 'mask'' $ \\restore -> do
+--     x <- 'liftT' acq
+--     restore (go x) ``onException'`` rel x
+-- @
 bracketOnError'
     :: MonadMask m
     => m a
@@ -597,7 +605,11 @@ bracketOnError' acq rel go = mask' $ \ restore -> do
 
 -- | Variant of 'bracket'.
 --
--- > bracket_ acq rel go = bracket acq (const rel) (const go)
+-- Implemented as:
+--
+-- @
+-- 'bracket_' acq rel go = 'bracket' acq ('const' rel) ('const' go)
+-- @
 bracket_
     :: (Exception e, MonadMask m)
     => m a
