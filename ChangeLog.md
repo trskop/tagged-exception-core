@@ -7,6 +7,12 @@
   from it were moved in to `Control.Monad.TaggedException.Core`. (**change**)
 * Type `Throws` has now instance for `Generic1`, but only on GHC >=7.10, due to
   `PolyKinds`. (**new**)
+* instance HiddenException AllocationLimitExceeded
+* `HiddenException` instances for `AllocationLimitExceeded` and `Void`, both
+  defined in base >=4.8. (**new**)
+* `HiddenException` instance for `TypeError`, defined in base >=4.9. (**new**)
+* Bumped upper bound of [transformers][] package to include 0.5.\* branch.
+  (**change**)
 
 
 ## Version 2.1.0.1
@@ -21,7 +27,7 @@
 ## Version 2.1.0.0
 
 * Builds on GHC from 7.4 to 7.10, later with base 4.8. (**change**)
-* Bumping transformers bounds to include 0.4.\* versions. (**change**)
+* Bumping [transformers][] bounds to include 0.4.\* versions. (**change**)
 * Dropped last threads of support for base <= 4.5; it hadn't worked anyway
   since [exceptions][] ==0.6 depend on base >=4.5 && <5. (breaking change)
 * Instances for [mtl][] >=2.1 package. Package [exceptions][] already depends
@@ -65,6 +71,6 @@
 [mtl]:
   http://hackage.haskell.org/package/mtl
   "mtl package on Hackage"
-[exceptions]:
-  http://hackage.haskell.org/package/exceptions
-  "exceptions package on Hackage"
+[transformers]:
+  http://hackage.haskell.org/package/transformers
+  "transformers package on Hackage"
