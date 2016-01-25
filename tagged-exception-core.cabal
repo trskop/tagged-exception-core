@@ -1,5 +1,5 @@
 Name:               tagged-exception-core
-Version:            2.1.0.1
+Version:            2.2.0.0
 
 Synopsis:           Reflect exceptions using phantom types.
 Description:
@@ -100,7 +100,7 @@ source-repository head
   type:             git
   location:         git://github.com/trskop/tagged-exception-core.git
 
-source-repository this
-  type:             git
-  location:         git://github.com/trskop/tagged-exception-core.git
-  tag:              2.1.0.1
+--source-repository this
+--  type:             git
+--  location:         git://github.com/trskop/tagged-exception-core.git
+--  tag:              2.2.0.0

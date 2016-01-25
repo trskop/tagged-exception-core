@@ -1,7 +1,7 @@
 # ChangeLog / ReleaseNotes
 
 
-## Version NEXT
+## Version 2.2.0.0
 
 * Deprecating module `Control.Monad.TaggedException.Utilities`, definitions
   from it were moved in to `Control.Monad.TaggedException.Core`. (**change**)
