@@ -7,7 +7,6 @@
   from it were moved in to `Control.Monad.TaggedException.Core`. (**change**)
 * Type `Throws` has now instance for `Generic1`, but only on GHC >=7.10, due to
   `PolyKinds`. (**new**)
-* instance HiddenException AllocationLimitExceeded
 * `HiddenException` instances for `AllocationLimitExceeded` and `Void`, both
   defined in base >=4.8. (**new**)
 * `HiddenException` instance for `TypeError`, defined in base >=4.9. (**new**)
