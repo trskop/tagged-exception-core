@@ -47,6 +47,16 @@ myFunction input = do
     -- ... some other stuff ...
 ```
 
+## License
+
+The BSD 3-Clause License, see [LICENSE][] file for details.
+
+
+## Contributions
+
+Contributions, pull requests and bug reports are welcome! Please don't be
+afraid to contact author using GitHub or by e-mail.
+
 
 
 [Hackage: tagged-exception-core]:
@@ -55,6 +65,9 @@ myFunction input = do
 [Haskell.org]:
   http://www.haskell.org
   "The Haskell Programming Language"
+[LICENSE]:
+  https://github.com/trskop/tagged-exception-core/blob/master/LICENSE
+  "License of endo package."
 [tl;dr Legal: BSD3]:
   https://tldrlegal.com/license/bsd-3-clause-license-%28revised%29
   "BSD 3-Clause License (Revised)"
