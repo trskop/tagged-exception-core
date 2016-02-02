@@ -14,6 +14,40 @@ Reflect exceptions using phantom types. This library provides core API and
 others may build on top of it.
 
 
+## Usage Example
+
+Example of reflecting reised exception in type:
+
+```Haskell
+{-# LANGUAGE DeriveDataTypeable #-}
+
+import Control.Exception (Exception)
+
+import Control.Monad.TaggedException (Throws)
+import qualified Control.Monad.TaggedException as E (liftT, throw)
+import Data.Typeable (Data.Typeable.Typeable)
+
+
+data NotReady = NotReady String
+    deriving (Show, Typeable)
+        -- Both required by Exception class
+
+instance Exception NotReady
+
+myFunction :: Input -> Throws NotReady IO Output
+myFunction input = do
+
+    -- ... some stuff ...
+
+    -- isReady :: Input -> IO Bool
+    ready <- E.liftT $ isReady input
+    unless ready
+        . E.throw $ NotReady "Resource of myFunction is not ready."
+
+    -- ... some other stuff ...
+```
+
+
 
 [Hackage: tagged-exception-core]:
   http://hackage.haskell.org/package/tagged-exception-core
