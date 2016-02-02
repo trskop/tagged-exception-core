@@ -25,7 +25,7 @@ import Control.Exception (Exception)
 
 import Control.Monad.TaggedException (Throws)
 import qualified Control.Monad.TaggedException as E (liftT, throw)
-import Data.Typeable (Data.Typeable.Typeable)
+import Data.Typeable (Typeable)
 
 
 data NotReady = NotReady String
