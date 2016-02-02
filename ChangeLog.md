@@ -12,6 +12,8 @@
 * `HiddenException` instance for `TypeError`, defined in base >=4.9. (**new**)
 * Bumped upper bound of [transformers][] package to include 0.5.\* branch.
   (**change**)
+* Uploaded to [Hackage][]:
+  <http://hackage.haskell.org/package/tagged-exception-core-2.2.0.0>
 
 
 ## Version 2.1.0.1
