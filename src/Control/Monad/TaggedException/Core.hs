@@ -37,7 +37,7 @@ module Control.Monad.TaggedException.Core
     -- * Exception tag
     , Throws
 
-    -- ** Cobinators
+    -- ** Combinators
     , liftT
     , lift2T
     , lift3T
